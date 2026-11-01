@@ -1,0 +1,94 @@
+name: Quality
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_ENABLE_COMMENTS: 'false'
+
+  backend:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-bookworm
+        env:
+          POSTGRES_DB: recephub_test
+          POSTGRES_USER: recephub_test
+          POSTGRES_PASSWORD: ci-fictional-only
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U recephub_test -d recephub_test"
+          --health-interval 5s --health-timeout 3s --health-retries 10
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      POSTGRES_DB: recephub_test
+      POSTGRES_USER: recephub_test
+      POSTGRES_PASSWORD: ci-fictional-only
+      TEST_DATABASE_URL: postgresql+psycopg://recephub_test:ci-fictional-only@localhost:5432/recephub_test
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+          cache: pip
+          cache-dependency-path: backend/requirements.lock
+      - run: pip install -r requirements.lock
+      - run: ruff check .
+      - run: ruff format --check .
+      - run: pytest
+      - run: alembic upgrade head
+      - run: alembic current
+      - run: alembic check
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    env:
+      NEXT_TELEMETRY_DISABLED: '1'
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run build
+
+  compose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - run: docker compose config --quiet
+      - run: docker compose up --build --wait --wait-timeout 180
+      - run: |
+          curl --fail http://localhost:8000/health
+          curl --fail http://localhost:8000/api/v1/health/ready
+          curl --fail http://localhost:8000/docs
+          curl --fail http://localhost:3000
+          curl --fail http://localhost:3000/manifest.webmanifest
+      - if: failure()
+        run: docker compose logs --no-color
+      - if: always()
+        run: docker compose down --volumes
