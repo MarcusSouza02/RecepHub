@@ -1,8 +1,8 @@
 # RecepHub — Modelagem Inicial do Banco de Dados
 
-**Versão:** 1.3
-**Data:** 04/11/2026
-**Status:** Persistência de autenticação implementada na Etapa 1 da Sprint 02, em revisão. Demais entidades são propostas; regras de jornada e cobertura pendentes de validação.
+**Versão:** 1.4
+**Data:** 12/11/2026
+**Status:** Persistência e serviços de autenticação implementados na Sprint 02. Demais entidades são propostas; regras de jornada e cobertura pendentes de validação.
 
 ## 1. Objetivo e princípios
 
@@ -16,19 +16,21 @@ Somente `users` e `user_sessions` possuem modelos e migração nesta entrega. A 
 ### 2.1 `users`
 - `id` UUID PK
 - `username` VARCHAR(80) UNIQUE NOT NULL
-- `password_hash` TEXT NOT NULL — reservado para Argon2id na Etapa 2
+- `password_hash` TEXT NOT NULL — Argon2id
 - `active` BOOLEAN NOT NULL DEFAULT TRUE
 - `created_at` TIMESTAMPTZ NOT NULL
 
 Acrescentados `login_window_started_at` TIMESTAMPTZ NULL e `login_attempt_count`
 SMALLINT NOT NULL DEFAULT 0. Contador limitado a 0–5; valor não zero exige início
-de janela preenchido. O controle da janela de 15 minutos será implementado posteriormente.
+de janela preenchido. O serviço implementa a janela compartilhada de 15 minutos,
+reservando tentativas em transação curta com bloqueio da conta.
 `created_at` tem default de banco `now()`; UUID é gerado pela aplicação.
 
 Conta única, inclusive inativa: índice único `uq_users_single_account` sobre constante
 `true`. Username corresponde a `^[a-z0-9._-]{3,80}$` com collation C; o banco rejeita
-valores não canônicos. A normalização será responsabilidade do serviço futuro.
-Provisionamento administrativo e hash funcional pertencem à Etapa 2.
+valores não canônicos. O serviço normaliza username antes de consultar/provisionar.
+Provisionamento administrativo e hash Argon2id foram implementados na Etapa 2,
+com comando interativo e sem conta/senha padrão. A migração continua sem seed.
 
 ### 2.2 `units`
 - `id` UUID PK
@@ -109,7 +111,7 @@ São as **linhas concretas** da escala do dia materializado. Não são geradas a
 - `revoked_at` TIMESTAMPTZ NULL, quando preenchido maior ou igual a `created_at`.
 
 Uma conta admite várias sessões independentes. Geração de token, SHA-256 e verificação
-de validade/revogação pertencem às próximas etapas. `TIMESTAMPTZ` representa instantes;
+de validade/revogação foram implementadas nas Etapas 2–3 da Sprint 02. `TIMESTAMPTZ` representa instantes;
 a apresentação do fuso depende da conexão, sem armazenar o nome de um fuso.
 
 ## 3. Semântica da escala-base e das exceções

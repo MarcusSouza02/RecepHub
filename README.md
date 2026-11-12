@@ -20,7 +20,33 @@ O [quadro de cards da Sprint 02](docs/09-sprint-02.md) organiza o planejamento a
 etapas, entregas, dependências e critérios de aceite. A implementação será autorizada e revisada
 por etapa; a existência do quadro não indica que a autenticação já foi implementada.
 
-A Etapa 1 está implementada e em revisão: modelos de conta/sessões, primeira migração
+Em 12/11/2026, o usuário autorizou a execução coordenada das etapas restantes com
+subagentes, revisão final e publicação em `dev`. Login, logout, proteção de páginas,
+sessões PostgreSQL e dashboard inicial foram implementados. Consulte o
+[relatório da Sprint 02](docs/11-sprint-02-relatorio-tecnico.md) para resultados e pendências.
+
+Depois de reconstruir os containers e revisar o destino do banco, aplique a migração e
+provisione sua conta interativamente (a senha não é recebida como argumento):
+
+```sh
+docker compose exec backend alembic upgrade head
+docker compose exec backend python -m app.cli.auth create
+```
+
+Abra http://localhost:3000/login. Para redefinir a senha e revogar todas as sessões:
+
+```sh
+docker compose exec backend python -m app.cli.auth reset-password
+```
+
+`AUTH_ORIGIN` deve ser a origem exata do navegador, inicialmente `http://localhost:3000`.
+Para usar `127.0.0.1`, outro host ou porta, configure a mesma origem no frontend e backend.
+`BACKEND_INTERNAL_URL` é exclusivo do servidor Next.js; o Compose usa `http://backend:8000`.
+Em produção, configure `ENVIRONMENT=production`, `AUTH_ORIGIN=https://seu-host` e
+`AUTH_SECURE_COOKIE=true`. Não existe senha ou conta padrão; nenhuma conta real foi criada
+automaticamente nesta entrega. O dashboard está vazio até as próximas sprints operacionais.
+
+A Etapa 1 foi implementada e publicada: modelos de conta/sessões, primeira migração
 e testes PostgreSQL. Consulte o [relatório da Etapa 1](docs/10-sprint-02-etapa-01.md)
 para arquivos, garantias, execução segura dos testes e resultados.
 

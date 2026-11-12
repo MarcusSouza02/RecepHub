@@ -77,6 +77,57 @@ jobs:
       - run: npm run typecheck
       - run: npm run build
 
+  browser:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-bookworm
+        env:
+          POSTGRES_DB: recephub_browser_test
+          POSTGRES_USER: recephub_test
+          POSTGRES_PASSWORD: ci-fictional-only
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U recephub_test -d recephub_browser_test"
+          --health-interval 5s --health-timeout 3s --health-retries 10
+    defaults:
+      run:
+        working-directory: frontend
+    env:
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run build
+      - name: Start disposable authentication API
+        working-directory: .
+        run: |
+          docker build -f infra/backend.Dockerfile -t recephub-sprint02-backend:latest backend
+          docker run -d --name recephub-sprint02-api-test --network host \
+            -e POSTGRES_HOST=127.0.0.1 -e POSTGRES_DB=recephub_browser_test \
+            -e POSTGRES_USER=recephub_test -e POSTGRES_PASSWORD=ci-fictional-only \
+            -e AUTH_ORIGIN=http://127.0.0.1:3180 \
+            -e TEST_DATABASE_URL=postgresql+psycopg://recephub_test:ci-fictional-only@127.0.0.1:5432/recephub_browser_test \
+            -e TEST_DATABASE_ALLOW_RESET=1 recephub-sprint02-backend:latest \
+            sh -c 'alembic upgrade head && exec python -m uvicorn app.main:app --host 0.0.0.0 --port 3181 --no-access-log'
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:3181/api/v1/health/ready; then exit 0; fi
+            sleep 1
+          done
+          exit 1
+      - run: npm run test:e2e
+      - if: failure()
+        run: docker logs recephub-sprint02-api-test
+      - if: always()
+        run: docker rm -f recephub-sprint02-api-test
+
   compose:
     runs-on: ubuntu-latest
     steps:
