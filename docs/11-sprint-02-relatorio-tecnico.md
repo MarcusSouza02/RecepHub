@@ -1,7 +1,8 @@
 # Sprint 02 — autenticação e acesso ao sistema
 
 Data: 12/11/2026. Entrega: conta única, sessões, login/logout e dashboard privado inicial.
-Estado: validação local aprovada; consolidação da homologação e CI remota em andamento.
+Estado: validação local aprovada; correção final de Compose autorizada para publicação.
+A homologação remota depende da execução da CI com essa correção.
 
 ## 1. Escopo e coordenação
 
@@ -111,7 +112,7 @@ Os modelos, a migração e as fixtures da Etapa 1 continuam documentados no
 | `src/app/error.tsx` | Indisponibilidade sem apresentar erro interno ou confundir falha técnica com logout. |
 | `src/services/api.ts` | Prontidão por URL relativa, sem comunicação direta do navegador com FastAPI. |
 | `package.json`, `package-lock.json` | Playwright 1.56.1 fixado e script test:e2e. Justificativa: validar navegador, cookies, navegação e integração reais. Atualizações transitivas compatíveis também foram tentadas para os avisos do audit. |
-| `next-env.d.ts` | Tipos gerados pelo Next.js atualizados pelo build/typegen. |
+| `next-env.d.ts` | Referências de desenvolvimento preservadas no Git. Build/typegen de produção pode atualizá-las localmente; o Compose executa next dev. Isso evita reescrita do arquivo do bind mount por um UID diferente no Linux. |
 | `playwright.config.ts` | Chromium desktop e mobile, produção Next na porta 3180, API de testes em 3181 e um worker para isolar a conta única. |
 | `tests/e2e/auth.spec.ts` | Fluxos reais contra FastAPI/PostgreSQL; falhas 503 da interface são injetadas explicitamente pelo Playwright. |
 | `compose.yaml` | Configuração compartilhada de origem/cookie e URL interna de backend. Não altera credenciais existentes. |
@@ -128,11 +129,11 @@ relatórios da Sprint 01 e da Etapa 1 preservam seus resultados históricos.
 | Backend completo | 95 testes aprovados em PostgreSQL 17/Python 3.11.18; 31,48 s. |
 | Ruff e formatação | Aprovados, 38 arquivos Python na verificação final. |
 | ESLint, TypeScript e build Next.js | Aprovados localmente. |
-| Navegador real | 22 cenários validados em desktop/mobile. Última rodada completa: 20 aprovados e dois casos com sincronização de foco corrigida; rodada dirigida posterior: quatro aprovados em 27 s, incluindo esses dois casos e relógio. A primeira rodada de 18 casos também passou integralmente. |
-| Compose | `docker compose config --quiet` aprovado. |
+| Navegador real | 22 cenários no job browser remoto aprovado. Localmente: 20 aprovados na última rodada completa e dois casos de foco corrigidos; rodada dirigida posterior com quatro aprovados em 27 s. A primeira rodada de 18 casos também passou integralmente. |
+| Compose local | Configuração aprovada; projeto isolado `recephub-sprint02-smoke` subiu com os três serviços saudáveis nas portas 3280/3281, após restaurar as referências de desenvolvimento. |
 | Benchmark Argon2id no container | 404,9 / 416,8 / 340,3 ms; média aproximada 387 ms. Não é garantia de desempenho em produção. |
 | GitHub da Etapa 1 | Execuções de `e43fa0c` consultadas em 12/11: concluídas com sucesso. |
-| GitHub desta entrega | A observar após o push, separadamente dos resultados locais. |
+| GitHub desta entrega | [Execução de 4c3ccba](https://github.com/MarcusSouza02/RecepHub/actions/runs/43330282322): backend, frontend, secrets e browser aprovados; Compose falhou. Ajuste final de tipos ainda local, sem resultado remoto observado para essa correção. |
 
 Os cenários de navegador cobrem login/logout, cookie inacessível ao JavaScript, sessão
 forjada, duas sessões independentes, Voltar após logout, HTML sem cache, rate limit,
@@ -158,6 +159,13 @@ Durante a integração, os testes detectaram e motivaram correções:
   Ubuntu 24.04 para manter compatibilidade com o Playwright fixado; `ubuntu-latest`
   já anunciava migração para Ubuntu 26. O download do log detalhado pela API pública
   foi recusado com 403, portanto o motivo interno da instalação não foi presumido.
+- O job Compose falhou na subida com healthcheck. A inspeção do gerador do Next mostrou
+  que a troca entre tipos de produção/desenvolvimento exige reescrever `next-env.d.ts`.
+  As referências de desenvolvimento foram restauradas no Git para o bind mount Linux
+  do Compose, onde o usuário node não necessariamente é dono do arquivo do checkout.
+  A preparação do commit foi inicialmente recusada pela ferramenta e posteriormente
+  autorizada pelo usuário. O smoke test local passou; a CI Linux dessa correção deve
+  ser confirmada para concluir a homologação.
 
 ## 6. Executar localmente
 
@@ -219,6 +227,11 @@ docker exec recephub-sprint02-api-test python -m tests.e2e_admin clean
 
 O job browser da CI usa outro banco descartável, `recephub_browser_test`, isolado dos
 outros jobs. As ferramentas de teste nunca escolhem o banco de desenvolvimento por fallback.
+
+Ao fim desta execução, a limpeza automática de `e2e.demo` foi recusada e a conta foi
+mantida somente no banco descartável. O projeto Compose de smoke também foi mantido,
+com dados fictícios e volumes próprios. A primeira tentativa de smoke encontrou a
+porta 8000 ocupada; o serviço existente foi preservado e o teste passou em 3280/3281.
 
 ## 8. Warnings e limites
 
