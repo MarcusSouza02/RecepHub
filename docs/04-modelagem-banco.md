@@ -1,23 +1,34 @@
 # RecepHub — Modelagem Inicial do Banco de Dados
 
-**Versão:** 1.2  
-**Data:** 29/10/2026  
-**Status:** Proposta técnica alinhada à ERS v1.1; regras de jornada e cobertura pendentes de validação.
+**Versão:** 1.3
+**Data:** 04/11/2026
+**Status:** Persistência de autenticação implementada na Etapa 1 da Sprint 02, em revisão. Demais entidades são propostas; regras de jornada e cobertura pendentes de validação.
 
 ## 1. Objetivo e princípios
 
 Modelo PostgreSQL enxuto para **uma usuária**. Permite gerar escalas a partir das unidades e jornadas habituais, registrar exceções por data, gerenciar férias/folgas e publicar uma escala completa de modo consistente. Não usa tabela de guichês fixos, não armazena dados de pacientes e não exige persistência de e-mails ou mensagens de IA.
 
-## 2. Tabelas iniciais (6)
+## 2. Tabelas previstas (7)
+
+Somente `users` e `user_sessions` possuem modelos e migração nesta entrega. A revisão
+`0001_auth_foundation` não cria as outras cinco tabelas nem cadastra uma conta.
 
 ### 2.1 `users`
 - `id` UUID PK
 - `username` VARCHAR(80) UNIQUE NOT NULL
-- `password_hash` TEXT NOT NULL — Argon2id
+- `password_hash` TEXT NOT NULL — reservado para Argon2id na Etapa 2
 - `active` BOOLEAN NOT NULL DEFAULT TRUE
 - `created_at` TIMESTAMPTZ NOT NULL
 
-Conta única criada por script administrativo; não existe cadastro público.
+Acrescentados `login_window_started_at` TIMESTAMPTZ NULL e `login_attempt_count`
+SMALLINT NOT NULL DEFAULT 0. Contador limitado a 0–5; valor não zero exige início
+de janela preenchido. O controle da janela de 15 minutos será implementado posteriormente.
+`created_at` tem default de banco `now()`; UUID é gerado pela aplicação.
+
+Conta única, inclusive inativa: índice único `uq_users_single_account` sobre constante
+`true`. Username corresponde a `^[a-z0-9._-]{3,80}$` com collation C; o banco rejeita
+valores não canônicos. A normalização será responsabilidade do serviço futuro.
+Provisionamento administrativo e hash funcional pertencem à Etapa 2.
 
 ### 2.2 `units`
 - `id` UUID PK
@@ -87,6 +98,20 @@ As datas são inclusivas. Treinamento com presença em uma unidade é tratado in
 
 São as **linhas concretas** da escala do dia materializado. Não são geradas antecipadamente para todos os dias futuros. Uma remoção excepcional é representada pela ausência daquela linha no snapshot explícito do dia — nunca pela exclusão da jornada habitual no cadastro.
 
+### 2.7 `user_sessions`
+
+- `id` UUID PK, gerado pela aplicação.
+- `user_id` UUID NOT NULL FK → `users.id` ON DELETE CASCADE, com índice.
+- `token_hash` CHAR(64) UNIQUE NOT NULL, hexadecimal minúsculo; sem token original.
+- `created_at` TIMESTAMPTZ NOT NULL DEFAULT now().
+- `expires_at` TIMESTAMPTZ NOT NULL, posterior a `created_at`.
+- `last_seen_at` TIMESTAMPTZ NOT NULL DEFAULT now(), maior ou igual a `created_at` e anterior a `expires_at`.
+- `revoked_at` TIMESTAMPTZ NULL, quando preenchido maior ou igual a `created_at`.
+
+Uma conta admite várias sessões independentes. Geração de token, SHA-256 e verificação
+de validade/revogação pertencem às próximas etapas. `TIMESTAMPTZ` representa instantes;
+a apresentação do fuso depende da conexão, sem armazenar o nome de um fuso.
+
 ## 3. Semântica da escala-base e das exceções
 
 1. **Dia sem `schedule_days`:** gerar visualização virtual da escala-base a partir de `employees.home_unit_id`, `regular_schedule` e `absences`.
@@ -96,11 +121,12 @@ São as **linhas concretas** da escala do dia materializado. Não são geradas a
 5. **Publicação:** validar o conjunto inteiro, atualizar `schedule_days.status` em transação e expor a versão publicada nas exportações. Edição posterior pode retornar o dia a `DRAFT`, segundo política a validar; o histórico completo de versões fica pós-MVP.
 6. **Atualização de jornada habitual:** vale para os dias ainda não materializados. Dias materializados não são reescritos sem escolha explícita.
 
-Essa abordagem usa seis tabelas e evita a ambiguidade entre “nenhuma exceção” e “retirada deliberada da escala”. A definição operacional de publicação e edição de uma escala já publicada deverá ser validada com a usuária.
+O modelo original de seis tabelas, agora acrescido de `user_sessions`, evita a ambiguidade entre “nenhuma exceção” e “retirada deliberada da escala”. A definição operacional de publicação e edição de uma escala já publicada deverá ser validada com a usuária.
 
 ## 4. Relacionamentos
 
 - `units` 1:N `employees` (origem habitual)
+- `users` 1:N `user_sessions`, com exclusão em cascata
 - `employees` 1:N `absences`
 - `schedule_days` 1:N `schedule_assignments`
 - `employees` 1:N `schedule_assignments`

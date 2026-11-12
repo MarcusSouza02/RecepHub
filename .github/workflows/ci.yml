@@ -41,6 +41,7 @@ jobs:
       POSTGRES_USER: recephub_test
       POSTGRES_PASSWORD: ci-fictional-only
       TEST_DATABASE_URL: postgresql+psycopg://recephub_test:ci-fictional-only@localhost:5432/recephub_test
+      TEST_DATABASE_ALLOW_RESET: '1'
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-python@v6
@@ -51,8 +52,8 @@ jobs:
       - run: pip install -r requirements.lock
       - run: ruff check .
       - run: ruff format --check .
-      - run: pytest
       - run: alembic upgrade head
+      - run: pytest
       - run: alembic current
       - run: alembic check
 

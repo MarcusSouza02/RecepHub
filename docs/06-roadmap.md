@@ -29,6 +29,10 @@ Alembic, qualidade e estrutura inicial do PWA. Autenticação permanece como eta
 marco; a Sprint 01 não entrega ainda o login protegido. Manifest e ícones serão iniciados agora,
 com homologação final no Marco 6. Detalhes em [Sprint 01](07-sprint-01.md).
 
+**Sprint 02 — planejamento aprovado:** autenticação de conta única, sessões, login e dashboard
+privado inicial. Acompanhar as entregas no [quadro de cards da Sprint 02](09-sprint-02.md).
+A implementação e o avanço entre etapas dependem de autorização explícita.
+
 - [ ] Repositório GitHub, README, licença, `.gitignore`, `.env.example` e estrutura `docs/`.
 - [x] Frontend Next.js + TypeScript + Tailwind + shadcn/ui.
 - [x] Backend FastAPI + SQLAlchemy + Alembic, PostgreSQL e Docker Compose.
