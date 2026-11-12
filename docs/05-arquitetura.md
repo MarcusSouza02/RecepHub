@@ -1,8 +1,8 @@
 # RecepHub — Arquitetura Técnica
 
-**Versão:** 1.1  
-**Data:** 29/10/2026  
-**Status:** Proposta alinhada à ERS v1.1; IA e composição de e-mail incluídas no MVP.
+**Versão:** 1.2
+**Data:** 12/11/2026
+**Status:** Autenticação implementada na Sprint 02; módulos operacionais e IA continuam propostos.
 
 ## 1. Objetivo arquitetural
 
@@ -23,7 +23,10 @@ Entregar PWA responsivo para uma usuária, com escalas predefinidas, exceções 
 
 ```text
 [PWA Next.js / navegador]
-   |  HTTPS (requisições autenticadas)
+   |  HTTPS / mesma origem
+   v
+[Next.js — Route Handlers /api/v1: lista restrita, CSRF, cookies]
+   |  BACKEND_INTERNAL_URL (somente servidor)
    v
 [FastAPI — monólito modular]
    |--- auth, users
@@ -40,6 +43,21 @@ Entregar PWA responsivo para uma usuária, com escalas predefinidas, exceções 
 ```
 
 Não existe integração autenticada com Outlook ou WhatsApp no MVP. A integração de IA ocorre **somente no backend**; a chave nunca é enviada ao navegador.
+
+Na Sprint 02, somente autenticação, infraestrutura e dashboard vazio estão implementados.
+O guard de servidor consulta a sessão no FastAPI antes de renderizar a página privada.
+Falha técnica apresenta indisponibilidade; `401` conduz ao login. O proxy não constitui
+autoridade de autenticação: o backend sempre valida token, conta ativa, revogação e validade.
+
+Tokens opacos de 32 bytes ficam em cookie HttpOnly/SameSite=Lax/Path=/, sem Domain;
+apenas SHA-256 é persistido. Cookie seguro `__Host-recephub_session` é obrigatório na
+configuração de produção HTTPS. Validade absoluta de 12h e inatividade de 2h não são
+prolongadas por polling: o monitor usa timer e revalida ao retomar a interface.
+
+Login/logout exigem origem exata, cabeçalho `X-RecepHub-CSRF: 1`, JSON e corpo até 4 KiB
+no proxy e na API. Login reserva uma das cinco tentativas por 15 minutos sob bloqueio
+da conta em transação curta; o Argon2id é calculado depois. Sucessos e nomes incorretos
+compartilham o contador PostgreSQL. Reset administrativo revoga todas as sessões.
 
 ## 4. Módulos e responsabilidades
 

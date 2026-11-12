@@ -27,6 +27,9 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-recephub}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-local-development-only}
       CORS_ORIGINS: '${CORS_ORIGINS:-["http://localhost:3000","http://127.0.0.1:3000"]}'
+      AUTH_ORIGIN: ${AUTH_ORIGIN:-http://localhost:3000}
+      AUTH_SECURE_COOKIE: ${AUTH_SECURE_COOKIE:-false}
+      ENVIRONMENT: ${ENVIRONMENT:-development}
     ports:
       - "127.0.0.1:8000:8000"
     volumes:
@@ -51,6 +54,9 @@ services:
       dockerfile: ../infra/frontend.Dockerfile
     environment:
       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000}
+      BACKEND_INTERNAL_URL: http://backend:8000
+      AUTH_ORIGIN: ${AUTH_ORIGIN:-http://localhost:3000}
+      AUTH_SECURE_COOKIE: ${AUTH_SECURE_COOKIE:-false}
       NEXT_TELEMETRY_DISABLED: ${NEXT_TELEMETRY_DISABLED:-1}
     ports:
       - "127.0.0.1:3000:3000"

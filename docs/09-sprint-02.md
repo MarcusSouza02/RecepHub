@@ -1,8 +1,20 @@
 # RecepHub — Sprint 02: quadro de cards
 
-**Tema:** autenticação e acesso ao sistema  
-**Data de organização:** 04/11/2026  
-**Situação:** Etapa 1 implementada em 04/11/2026, em revisão; demais etapas aguardam autorização.
+**Tema:** autenticação e acesso ao sistema
+**Data de organização:** 04/11/2026
+**Situação:** implementação coordenada das Etapas 1–5 autorizada em 12/11/2026; validação final em andamento.
+
+### Condução atual — autorização de 12/11/2026
+
+O usuário delegou ao coordenador o avanço entre etapas, a distribuição para subagentes,
+a revisão final por um modelo de maior capacidade e os commits/push sem `Co-authored-by`.
+Essa autorização substitui as pausas manuais e as restrições de Git descritas no
+planejamento original abaixo, dentro do escopo desta Sprint 02. Os checkpoints passam
+a ser executados pelo coordenador com testes e revisão. O destino continua sendo `dev`;
+deploy, merge para `main` e provisionamento de conta real não fazem parte desta entrega.
+
+A Etapa 1 já foi publicada em `e43fa0c`. Os demais arquivos, resultados e pendências
+serão consolidados no [relatório da Sprint 02](11-sprint-02-relatorio-tecnico.md).
 
 Este quadro transforma o planejamento técnico aprovado em entregas menores e verificáveis.
 Cada card descreve o que será feito, as dependências e como comprovar a conclusão.
@@ -39,21 +51,21 @@ Entrega implementada e testada vai para revisão; só a aprovação da pessoa re
 | Card | Etapa | Entrega | Dependências técnicas | Estado atual |
 |---|---|---|---|---|
 | [S02-00](#s02-00--consolidar-o-planejamento-técnico) | 0 | Planejamento e decisões | — | Concluído: planejamento aprovado |
-| [S02-01](#s02-01--modelar-a-conta-administrativa) | 1 | Modelo User | S02-00 | Em revisão |
-| [S02-02](#s02-02--modelar-as-sessões) | 1 | Modelo UserSession | S02-01 | Em revisão |
-| [S02-03](#s02-03--criar-e-validar-a-primeira-migração) | 1 | Migração e testes de persistência | S02-01, S02-02 | Em revisão |
-| [S02-04](#s02-04--implementar-hash-e-provisionamento-administrativo) | 2 | Argon2id e procedimento administrativo | S02-03 | A fazer |
-| [S02-05](#s02-05--implementar-login-e-criação-da-sessão) | 2 | Login e cookie | S02-04 | A fazer |
-| [S02-06](#s02-06--consultar-e-encerrar-a-sessão) | 2 | Consulta de sessão e logout | S02-05 | A fazer |
-| [S02-07](#s02-07--consolidar-as-defesas-de-acesso-e-csrf) | 3 | Proteção, expiração e CSRF | S02-06 | A fazer |
-| [S02-08](#s02-08--limitar-tentativas-de-login) | 3 | Limite persistente de tentativas | S02-07 | A fazer |
-| [S02-09](#s02-09--consolidar-a-integração-e-os-checks-do-backend) | 3 | Integração e CI do backend | S02-07, S02-08 | A fazer |
-| [S02-10](#s02-10--criar-o-proxy-de-mesma-origem) | 4 | Proxy Next.js | S02-09 | A fazer |
-| [S02-11](#s02-11--criar-a-interface-de-login) | 4 | Formulário de login | S02-10 | A fazer |
-| [S02-12](#s02-12--proteger-a-navegação-e-integrar-o-logout) | 4 | Guard de sessão e navegação | S02-11 | A fazer |
-| [S02-13](#s02-13--montar-o-layout-privado-e-o-dashboard-vazio) | 5 | Área privada responsiva | S02-12 | A fazer |
-| [S02-14](#s02-14--homologar-o-fluxo-completo) | 5 | Navegador, E2E e checks | S02-13 | A fazer |
-| [S02-15](#s02-15--documentar-a-entrega-e-encerrar-a-sprint) | 5 | Relatório e revisão final | S02-14 | A fazer |
+| [S02-01](#s02-01--modelar-a-conta-administrativa) | 1 | Modelo User | S02-00 | Validado localmente; CI final pendente |
+| [S02-02](#s02-02--modelar-as-sessões) | 1 | Modelo UserSession | S02-01 | Validado localmente; CI final pendente |
+| [S02-03](#s02-03--criar-e-validar-a-primeira-migração) | 1 | Migração e testes de persistência | S02-01, S02-02 | Validado localmente; CI final pendente |
+| [S02-04](#s02-04--implementar-hash-e-provisionamento-administrativo) | 2 | Argon2id e procedimento administrativo | S02-03 | Validado localmente; CI final pendente |
+| [S02-05](#s02-05--implementar-login-e-criação-da-sessão) | 2 | Login e cookie | S02-04 | Validado localmente; CI final pendente |
+| [S02-06](#s02-06--consultar-e-encerrar-a-sessão) | 2 | Consulta de sessão e logout | S02-05 | Validado localmente; CI final pendente |
+| [S02-07](#s02-07--consolidar-as-defesas-de-acesso-e-csrf) | 3 | Proteção, expiração e CSRF | S02-06 | Validado localmente; CI final pendente |
+| [S02-08](#s02-08--limitar-tentativas-de-login) | 3 | Limite persistente de tentativas | S02-07 | Validado localmente; CI final pendente |
+| [S02-09](#s02-09--consolidar-a-integração-e-os-checks-do-backend) | 3 | Integração e CI do backend | S02-07, S02-08 | Validado localmente; CI final pendente |
+| [S02-10](#s02-10--criar-o-proxy-de-mesma-origem) | 4 | Proxy Next.js | S02-09 | Validado localmente; CI final pendente |
+| [S02-11](#s02-11--criar-a-interface-de-login) | 4 | Formulário de login | S02-10 | Validado localmente; CI final pendente |
+| [S02-12](#s02-12--proteger-a-navegação-e-integrar-o-logout) | 4 | Guard de sessão e navegação | S02-11 | Validado localmente; CI final pendente |
+| [S02-13](#s02-13--montar-o-layout-privado-e-o-dashboard-vazio) | 5 | Área privada responsiva | S02-12 | Validado localmente; CI final pendente |
+| [S02-14](#s02-14--homologar-o-fluxo-completo) | 5 | Navegador, E2E e checks | S02-13 | Validado localmente; CI final pendente |
+| [S02-15](#s02-15--documentar-a-entrega-e-encerrar-a-sprint) | 5 | Relatório e revisão final | S02-14 | Validado localmente; CI final pendente |
 
 Dependência técnica satisfeita **não autoriza avanço**: ao terminar uma etapa, apresentar
 resultados e diffs e aguardar autorização explícita para a próxima. Se for autorizado somente
@@ -63,7 +75,7 @@ um card, concluir apenas esse card e aguardar nova orientação.
 
 ### S02-00 — Consolidar o planejamento técnico
 
-**Estado:** concluído pelo planejamento aprovado pelo usuário.  
+**Estado:** concluído pelo planejamento aprovado pelo usuário.
 **Objetivo:** definir o desenho da autenticação antes de implementar.
 
 **Entregas realizadas**
@@ -88,7 +100,7 @@ Sem endpoints, hash funcional ou interface nesta etapa.
 
 ### S02-01 — Modelar a conta administrativa
 
-**Estado:** em revisão (04/11/2026). **Depende de:** S02-00 e autorização da Etapa 1.
+**Estado:** concluído pela coordenação (12/11/2026). **Depende de:** S02-00 e autorização da Etapa 1.
 
 **Objetivo:** representar a única conta de acesso, preservando o modelo de negócio proposto.
 
@@ -110,7 +122,7 @@ Sem endpoints, hash funcional ou interface nesta etapa.
 
 ### S02-02 — Modelar as sessões
 
-**Estado:** em revisão (04/11/2026). **Depende de:** S02-01.
+**Estado:** concluído pela coordenação (12/11/2026). **Depende de:** S02-01.
 
 **Objetivo:** permitir expiração e revogação por dispositivo sem guardar o token original.
 
@@ -132,7 +144,7 @@ Sem endpoints, hash funcional ou interface nesta etapa.
 
 ### S02-03 — Criar e validar a primeira migração
 
-**Estado:** em revisão (04/11/2026). **Depende de:** S02-01 e S02-02.
+**Estado:** concluído pela coordenação (12/11/2026). **Depende de:** S02-01 e S02-02.
 
 **Objetivo:** tornar o esquema reproduzível e comprovar suas garantias no PostgreSQL.
 
@@ -174,80 +186,80 @@ Os endpoints já devem nascer com as defesas mínimas; a Etapa 3 aprofunda prote
 
 ### S02-04 — Implementar hash e provisionamento administrativo
 
-**Estado:** a fazer. **Depende de:** S02-03 e autorização da Etapa 2.
+**Estado:** implementado; validado localmente (12/11/2026). **Depende de:** S02-03 e autorização da Etapa 2.
 
 **Objetivo:** cadastrar a conta inicial e administrar a senha sem expô-la em arquivos ou comandos.
 
 **Entregas**
 
-- [ ] Adicionar argon2-cffi, justificar a dependência e atualizar o lock.
-- [ ] Implementar hash, verificação e rehash com Argon2id: inicialmente 64 MiB, três iterações, paralelismo 1, salt 16 bytes e hash 32 bytes.
-- [ ] Medir o custo do hash no container e registrar o resultado.
-- [ ] Criar comando administrativo com getpass e confirmação, sem senha em argumento.
-- [ ] Exigir senha de 15–128 caracteres, sem aparar espaços ou impor composição artificial.
-- [ ] Recusar criação de segunda conta; permitir redefinição da existente com revogação de suas sessões.
+- [x] Adicionar argon2-cffi, justificar a dependência e atualizar o lock.
+- [x] Implementar hash, verificação e rehash com Argon2id: inicialmente 64 MiB, três iterações, paralelismo 1, salt 16 bytes e hash 32 bytes.
+- [x] Medir o custo do hash no container e registrar o resultado.
+- [x] Criar comando administrativo com getpass e confirmação, sem senha em argumento.
+- [x] Exigir senha de 15–128 caracteres, sem aparar espaços ou impor composição artificial.
+- [x] Recusar criação de segunda conta; permitir redefinição da existente com revogação de suas sessões.
 
 **Áreas previstas:** `backend/app/core/security.py`, `backend/app/cli/auth.py`, serviço/repositório,
 manifests Python e testes de senha/provisionamento.
 
 **Aceite e verificação**
 
-- [ ] Hash corresponde a Argon2id; senha correta verifica e incorreta falha.
-- [ ] Testes cobrem duplicação, entradas inválidas e redefinição com revogação.
-- [ ] Senha não aparece em saída, logs ou arquivos versionados.
-- [ ] Conta efetiva é provisionada manualmente pela pessoa responsável, sem conta/senha padrão automática.
+- [x] Hash corresponde a Argon2id; senha correta verifica e incorreta falha.
+- [x] Testes cobrem duplicação, entradas inválidas e redefinição com revogação.
+- [x] Senha não aparece em saída, logs ou arquivos versionados.
+- [x] Conta efetiva é provisionada manualmente pela pessoa responsável, sem conta/senha padrão automática.
 
 ### S02-05 — Implementar login e criação da sessão
 
-**Estado:** a fazer. **Depende de:** S02-04.
+**Estado:** implementado; validado localmente (12/11/2026). **Depende de:** S02-04.
 
 **Objetivo:** autenticar a conta e criar uma sessão independente para o navegador.
 
 **Entregas**
 
-- [ ] Implementar POST /api/v1/auth/login com JSON username/password.
-- [ ] Validar origem permitida, X-RecepHub-CSRF: 1 e application/json desde a primeira versão.
-- [ ] Limitar corpo a 4 KiB e sanitizar erros de validação, sem ecoar a senha.
-- [ ] Retornar o mesmo erro para senha incorreta, usuário inexistente ou inativo.
-- [ ] Gerar token aleatório de 32 bytes, persistir somente SHA-256 e emitir cookie conforme ambiente.
-- [ ] Retornar user, expires_at e idle_expires_at, sem token ou hash.
-- [ ] Substituir/revogar sessão anterior do mesmo navegador sem revogar outros dispositivos.
-- [ ] Implementar transação de criação e tratamento de falha de banco sem confirmação indevida de sucesso.
+- [x] Implementar POST /api/v1/auth/login com JSON username/password.
+- [x] Validar origem permitida, X-RecepHub-CSRF: 1 e application/json desde a primeira versão.
+- [x] Limitar corpo a 4 KiB e sanitizar erros de validação, sem ecoar a senha.
+- [x] Retornar o mesmo erro para senha incorreta, usuário inexistente ou inativo.
+- [x] Gerar token aleatório de 32 bytes, persistir somente SHA-256 e emitir cookie conforme ambiente.
+- [x] Retornar user, expires_at e idle_expires_at, sem token ou hash.
+- [x] Substituir/revogar sessão anterior do mesmo navegador sem revogar outros dispositivos.
+- [x] Implementar transação de criação e tratamento de falha de banco sem confirmação indevida de sucesso.
 
 **Áreas previstas:** schemas/auth, services/auth, repositories/auth, api/v1/auth, settings,
 router, tratamento de erros e testes do backend.
 
 **Aceite e verificação**
 
-- [ ] Sucesso retorna 200 e cookie; credenciais inválidas retornam 401 uniforme.
-- [ ] Banco guarda somente hash e timestamps corretos; cookie recebido do cliente não é reaproveitado como novo token.
-- [ ] Testes conferem atributos do cookie, validação e ausência de credenciais em respostas/logs.
-- [ ] Configuração de produção exige HTTPS/cookie Secure; valores reais do .env não são alterados automaticamente.
+- [x] Sucesso retorna 200 e cookie; credenciais inválidas retornam 401 uniforme.
+- [x] Banco guarda somente hash e timestamps corretos; cookie recebido do cliente não é reaproveitado como novo token.
+- [x] Testes conferem atributos do cookie, validação e ausência de credenciais em respostas/logs.
+- [x] Configuração de produção exige HTTPS/cookie Secure; valores reais do .env não são alterados automaticamente.
 
 ### S02-06 — Consultar e encerrar a sessão
 
-**Estado:** a fazer. **Depende de:** S02-05.
+**Estado:** implementado; validado localmente (12/11/2026). **Depende de:** S02-05.
 
 **Objetivo:** reconhecer a usuária autenticada e permitir logout com revogação efetiva.
 
 **Entregas**
 
-- [ ] Implementar GET /api/v1/auth/session com o contrato de sessão aprovado.
-- [ ] Verificar token, usuário ativo, revogação e limites absoluto/inativo no servidor.
-- [ ] Atualizar last_seen_at sem ultrapassar a expiração absoluta.
-- [ ] Implementar POST /api/v1/auth/logout com origem/cabeçalho CSRF exigidos.
-- [ ] Revogar sessão atual e excluir cookie; logout repetido deve ser idempotente após a validação CSRF.
-- [ ] Retornar 503 se a revogação falhar no banco, sem afirmar que logout foi concluído.
-- [ ] Usar Cache-Control: no-store nas respostas de autenticação.
+- [x] Implementar GET /api/v1/auth/session com o contrato de sessão aprovado.
+- [x] Verificar token, usuário ativo, revogação e limites absoluto/inativo no servidor.
+- [x] Atualizar last_seen_at sem ultrapassar a expiração absoluta.
+- [x] Implementar POST /api/v1/auth/logout com origem/cabeçalho CSRF exigidos.
+- [x] Revogar sessão atual e excluir cookie; logout repetido deve ser idempotente após a validação CSRF.
+- [x] Retornar 503 se a revogação falhar no banco, sem afirmar que logout foi concluído.
+- [x] Usar Cache-Control: no-store nas respostas de autenticação.
 
 **Áreas previstas:** endpoints/serviço/repositório de autenticação, dependências da API e testes.
 
 **Aceite e verificação**
 
-- [ ] Consulta válida retorna 200; ausente, expirada ou revogada retorna 401.
-- [ ] Logout retorna 204 após revogação; token anterior deixa de autenticar.
-- [ ] Logout de uma sessão não revoga a de outro dispositivo.
-- [ ] Testes não usam dados reais e verificam falha de banco e repetição do logout.
+- [x] Consulta válida retorna 200; ausente, expirada ou revogada retorna 401.
+- [x] Logout retorna 204 após revogação; token anterior deixa de autenticar.
+- [x] Logout de uma sessão não revoga a de outro dispositivo.
+- [x] Testes não usam dados reais e verificam falha de banco e repetição do logout.
 
 **Checkpoint:** apresentar fluxo HTTP, cookies, transações, comandos administrativos e testes;
 aguardar revisão e autorização da Etapa 3. Backend funcional ainda não significa publicação homologada.
@@ -259,74 +271,74 @@ os endpoints públicos de infraestrutura.
 
 ### S02-07 — Consolidar as defesas de acesso e CSRF
 
-**Estado:** a fazer. **Depende de:** S02-06 e autorização da Etapa 3.
+**Estado:** implementado; validado localmente (12/11/2026). **Depende de:** S02-06 e autorização da Etapa 3.
 
 **Objetivo:** verificar que sessão inválida e requisições forjadas não liberam acesso nem alteram estado.
 
 **Entregas**
 
-- [ ] Consolidar dependência reutilizável de autenticação para endpoints privados.
-- [ ] Testar origem ausente, null, não autorizada e cabeçalho CSRF ausente/incorreto em login/logout.
-- [ ] Confirmar bloqueio de formatos de conteúdo inadequados e sanitização de erros.
-- [ ] Testar expiração de 12 horas e inatividade de 2 horas com relógio controlado.
-- [ ] Testar token adulterado, usuário inativo e revogação concorrente com atualização de atividade.
-- [ ] Preparar CORS para a arquitetura de mesma origem, sem credenciais para origens externas.
+- [x] Consolidar dependência reutilizável de autenticação para endpoints privados.
+- [x] Testar origem ausente, null, não autorizada e cabeçalho CSRF ausente/incorreto em login/logout.
+- [x] Confirmar bloqueio de formatos de conteúdo inadequados e sanitização de erros.
+- [x] Testar expiração de 12 horas e inatividade de 2 horas com relógio controlado.
+- [x] Testar token adulterado, usuário inativo e revogação concorrente com atualização de atividade.
+- [x] Preparar CORS para a arquitetura de mesma origem, sem credenciais para origens externas.
 
 **Áreas previstas:** segurança, dependências, settings, serviço de autenticação e testes adversos.
 
 **Aceite e verificação**
 
-- [ ] API nega acesso independentemente de qualquer proteção visual do frontend.
-- [ ] Requisição concorrente não reativa sessão revogada.
-- [ ] CSRF é verificado no backend, não somente por SameSite ou pela futura interface.
-- [ ] Nenhum GET realiza operação de login/logout; saúde e prontidão permanecem públicas.
+- [x] API nega acesso independentemente de qualquer proteção visual do frontend.
+- [x] Requisição concorrente não reativa sessão revogada.
+- [x] CSRF é verificado no backend, não somente por SameSite ou pela futura interface.
+- [x] Nenhum GET realiza operação de login/logout; saúde e prontidão permanecem públicas.
 
 ### S02-08 — Limitar tentativas de login
 
-**Estado:** a fazer. **Depende de:** S02-07.
+**Estado:** implementado; validado localmente (12/11/2026). **Depende de:** S02-07.
 
 **Objetivo:** limitar novas autenticações de forma persistente, sem Redis ou confiança no IP do proxy.
 
 **Entregas**
 
-- [ ] Usar os campos de janela/contador de User criados na Etapa 1.
-- [ ] Reservar tentativa em transação curta com bloqueio da linha antes de verificar a senha.
-- [ ] Contar cinco formulários válidos por 15 minutos, incluindo sucessos e usuários informados incorretamente.
-- [ ] Retornar 429 e Retry-After ao atingir o limite, sem prolongar a janela por recusas posteriores.
-- [ ] Reiniciar a janela quando o período terminar, sem zerá-la em um login bem-sucedido.
-- [ ] Manter sessões já abertas operantes e o contador efetivo após reinicialização da API.
+- [x] Usar os campos de janela/contador de User criados na Etapa 1.
+- [x] Reservar tentativa em transação curta com bloqueio da linha antes de verificar a senha.
+- [x] Contar cinco formulários válidos por 15 minutos, incluindo sucessos e usuários informados incorretamente.
+- [x] Retornar 429 e Retry-After ao atingir o limite, sem prolongar a janela por recusas posteriores.
+- [x] Reiniciar a janela quando o período terminar, sem zerá-la em um login bem-sucedido.
+- [x] Manter sessões já abertas operantes e o contador efetivo após reinicialização da API.
 
 **Áreas previstas:** serviço/repositório de autenticação, settings e testes de limite/concorrência.
 
 **Aceite e verificação**
 
-- [ ] Cinco tentativas são contabilizadas; a sexta é recusada até terminar a janela.
-- [ ] Concorrência não ultrapassa o limite; não há dependência de estado apenas em memória.
-- [ ] Testes cobrem Retry-After, término da janela, sucessos contabilizados e ausência de impacto sobre sessões abertas.
+- [x] Cinco tentativas são contabilizadas; a sexta é recusada até terminar a janela.
+- [x] Concorrência não ultrapassa o limite; não há dependência de estado apenas em memória.
+- [x] Testes cobrem Retry-After, término da janela, sucessos contabilizados e ausência de impacto sobre sessões abertas.
 
 ### S02-09 — Consolidar a integração e os checks do backend
 
-**Estado:** a fazer. **Depende de:** S02-07 e S02-08.
+**Estado:** implementado; validado localmente (12/11/2026). **Depende de:** S02-07 e S02-08.
 
 **Objetivo:** reunir evidência reproduzível de que persistência, autenticação e segurança funcionam juntas.
 
 **Entregas**
 
-- [ ] Isolar sessões, contadores e contas fictícias por teste.
-- [ ] Executar integração contra PostgreSQL descartável da Sprint 02.
-- [ ] Conferir que fixtures nunca apontam ciclos destrutivos para o banco de desenvolvimento.
-- [ ] Consolidar testes de login, revogação, expiração, CSRF, tentativas e indisponibilidade.
-- [ ] Ajustar workflow para migrações, testes, Ruff e regressão de infraestrutura.
-- [ ] Documentar resultados, falhas e warnings, sem filtros para ocultá-los.
+- [x] Isolar sessões, contadores e contas fictícias por teste.
+- [x] Executar integração contra PostgreSQL descartável da Sprint 02.
+- [x] Conferir que fixtures nunca apontam ciclos destrutivos para o banco de desenvolvimento.
+- [x] Consolidar testes de login, revogação, expiração, CSRF, tentativas e indisponibilidade.
+- [x] Ajustar workflow para migrações, testes, Ruff e regressão de infraestrutura.
+- [x] Documentar resultados, falhas e warnings, sem filtros para ocultá-los.
 
 **Áreas previstas:** `backend/tests/`, workflow, documentação de execução e evidências.
 
 **Aceite e verificação**
 
-- [ ] Bateria backend passa sem depender de sessão ou credencial real.
-- [ ] Health, prontidão e documentação FastAPI mantêm os contratos esperados.
-- [ ] Ruff passa; warning conhecido do TestClient é reportado, não ignorado.
-- [ ] CI configurada e execução remota observada são registradas como situações distintas.
+- [x] Bateria backend passa sem depender de sessão ou credencial real.
+- [x] Health, prontidão e documentação FastAPI mantêm os contratos esperados.
+- [x] Ruff passa; warning conhecido do TestClient é reportado, não ignorado.
+- [x] CI configurada e execução remota observada são registradas como situações distintas.
 
 **Checkpoint:** apresentar matriz de testes, resultados e diffs; aguardar autorização da Etapa 4.
 Os testes de cada card anterior continuam obrigatórios: este card consolida, não adia testes.
@@ -338,77 +350,77 @@ dashboard mínimo protegido, ainda sem o layout privado completo.
 
 ### S02-10 — Criar o proxy de mesma origem
 
-**Estado:** a fazer. **Depende de:** S02-09 e autorização da Etapa 4.
+**Estado:** implementado; validado localmente (12/11/2026). **Depende de:** S02-09 e autorização da Etapa 4.
 
 **Objetivo:** fazer o navegador conversar somente com o Next.js para autenticação e prontidão.
 
 **Entregas**
 
-- [ ] Criar Route Handler para lista restrita de caminhos/métodos de autenticação e prontidão.
-- [ ] Usar BACKEND_INTERNAL_URL exclusivo do servidor, com destino fixo e sem URL fornecida pelo cliente.
-- [ ] Encaminhar somente cookie de sessão e cabeçalhos necessários, preservando Set-Cookie e sua exclusão.
-- [ ] Validar origem/cabeçalho CSRF antes de encaminhar escritas; não completar requisições inválidas automaticamente.
-- [ ] Tratar timeout/indisponibilidade sem expor detalhes nem converter erro técnico em 401.
-- [ ] Migrar o indicador de saúde existente para URL relativa e finalizar ajustes de CORS/configuração.
+- [x] Criar Route Handler para lista restrita de caminhos/métodos de autenticação e prontidão.
+- [x] Usar BACKEND_INTERNAL_URL exclusivo do servidor, com destino fixo e sem URL fornecida pelo cliente.
+- [x] Encaminhar somente cookie de sessão e cabeçalhos necessários, preservando Set-Cookie e sua exclusão.
+- [x] Validar origem/cabeçalho CSRF antes de encaminhar escritas; não completar requisições inválidas automaticamente.
+- [x] Tratar timeout/indisponibilidade sem expor detalhes nem converter erro técnico em 401.
+- [x] Migrar o indicador de saúde existente para URL relativa e finalizar ajustes de CORS/configuração.
 
 **Áreas previstas:** `frontend/src/app/api/v1/[...path]/route.ts`, serviços HTTP,
 Compose, exemplo de ambiente e testes do proxy.
 
 **Aceite e verificação**
 
-- [ ] Navegador usa a mesma origem para login, sessão, logout e prontidão.
-- [ ] Destinos não autorizados não são encaminhados; cookies não vazam entre clientes.
-- [ ] Testes conferem criação/exclusão do cookie e falha upstream.
-- [ ] Health checks Docker continuam funcionando e tokens não aparecem em logs.
+- [x] Navegador usa a mesma origem para login, sessão, logout e prontidão.
+- [x] Destinos não autorizados não são encaminhados; cookies não vazam entre clientes.
+- [x] Testes conferem criação/exclusão do cookie e falha upstream.
+- [x] Health checks Docker continuam funcionando e tokens não aparecem em logs.
 
 ### S02-11 — Criar a interface de login
 
-**Estado:** a fazer. **Depende de:** S02-10.
+**Estado:** implementado; validado localmente (12/11/2026). **Depende de:** S02-10.
 
 **Objetivo:** permitir acesso compreensível e responsivo, distinguindo credencial incorreta de falha técnica.
 
 **Entregas**
 
-- [ ] Criar /login com username, senha e envio pelo proxy.
-- [ ] Usar Tailwind/componentes básicos da estrutura shadcn existente, sem biblioteca adicional de formulários.
-- [ ] Tratar loading, erro de credenciais, validação, limite de tentativas e indisponibilidade.
-- [ ] Evitar envio duplicado durante processamento e oferecer feedback acessível.
-- [ ] Adicionar @playwright/test como dependência de desenvolvimento com versão exata no lock e preparar E2E.
-- [ ] Não armazenar tokens em localStorage, sessionStorage, props ou JSON.
+- [x] Criar /login com username, senha e envio pelo proxy.
+- [x] Usar Tailwind/componentes básicos da estrutura shadcn existente, sem biblioteca adicional de formulários.
+- [x] Tratar loading, erro de credenciais, validação, limite de tentativas e indisponibilidade.
+- [x] Evitar envio duplicado durante processamento e oferecer feedback acessível.
+- [x] Adicionar @playwright/test como dependência de desenvolvimento com versão exata no lock e preparar E2E.
+- [x] Não armazenar tokens em localStorage, sessionStorage, props ou JSON.
 
 **Áreas previstas:** página /login, feature e serviço de autenticação, componentes de formulário,
 manifest/lock npm e configuração/testes Playwright.
 
 **Aceite e verificação**
 
-- [ ] Login válido leva ao dashboard; erro não revela existência de conta nem repete a senha.
-- [ ] 429 e 503 têm mensagens apropriadas e não são exibidos como senha incorreta.
-- [ ] Lint, TypeScript e build passam; primeiro teste do formulário é executado em navegador.
+- [x] Login válido leva ao dashboard; erro não revela existência de conta nem repete a senha.
+- [x] 429 e 503 têm mensagens apropriadas e não são exibidos como senha incorreta.
+- [x] Lint, TypeScript e build passam; primeiro teste do formulário é executado em navegador.
 
 ### S02-12 — Proteger a navegação e integrar o logout
 
-**Estado:** a fazer. **Depende de:** S02-11.
+**Estado:** implementado; validado localmente (12/11/2026). **Depende de:** S02-11.
 
 **Objetivo:** impedir renderização indevida de conteúdo privado e descartar estado anterior após logout.
 
 **Entregas**
 
-- [ ] Criar guard de servidor que consulta a sessão no FastAPI antes de renderizar a página privada.
-- [ ] Implementar /dashboard mínimo protegido e encaminhamento de / para login/dashboard conforme sessão.
-- [ ] Não confiar apenas no layout, middleware ou presença do cookie.
-- [ ] Integrar logout, respeitando falha de revogação sem anunciar sucesso indevido.
-- [ ] Fazer navegação completa com substituição de histórico nas fronteiras login/logout e não compartilhar conteúdo privado por cache.
-- [ ] Tratar 401 como sessão inválida e 503 como indisponibilidade, sem confundi-los.
+- [x] Criar guard de servidor que consulta a sessão no FastAPI antes de renderizar a página privada.
+- [x] Implementar /dashboard mínimo protegido e encaminhamento de / para login/dashboard conforme sessão.
+- [x] Não confiar apenas no layout, middleware ou presença do cookie.
+- [x] Integrar logout, respeitando falha de revogação sem anunciar sucesso indevido.
+- [x] Fazer navegação completa com substituição de histórico nas fronteiras login/logout e não compartilhar conteúdo privado por cache.
+- [x] Tratar 401 como sessão inválida e 503 como indisponibilidade, sem confundi-los.
 
 **Áreas previstas:** guard de servidor, página inicial, página privada mínima,
 serviço/feature de autenticação e testes de navegação.
 
 **Aceite e verificação**
 
-- [ ] Acesso direto anônimo e cookie falso não liberam conteúdo privado.
-- [ ] Logout revoga antes de levar à tela de login; token anterior não funciona.
-- [ ] Reabrir navegador dentro da validade mantém sessão; expiração exige novo login.
-- [ ] Testes verificam que Voltar após logout não restaura dashboard utilizável.
+- [x] Acesso direto anônimo e cookie falso não liberam conteúdo privado.
+- [x] Logout revoga antes de levar à tela de login; token anterior não funciona.
+- [x] Reabrir navegador dentro da validade mantém sessão; expiração exige novo login.
+- [x] Testes verificam que Voltar após logout não restaura dashboard utilizável.
 
 **Checkpoint:** apresentar proxy, cookies no navegador, fluxo de login/logout e diffs;
 aguardar revisão e autorização da Etapa 5.
@@ -420,73 +432,73 @@ resultados de testes e documentação de encerramento.
 
 ### S02-13 — Montar o layout privado e o dashboard vazio
 
-**Estado:** a fazer. **Depende de:** S02-12 e autorização da Etapa 5.
+**Estado:** implementado; validado localmente (12/11/2026). **Depende de:** S02-12 e autorização da Etapa 5.
 
 **Objetivo:** oferecer uma base administrativa clara sem antecipar módulos operacionais.
 
 **Entregas**
 
-- [ ] Criar layout privado com sidebar desktop e navegação superior mobile.
-- [ ] Disponibilizar Dashboard e Sair, com identidade da conta autenticada.
-- [ ] Apresentar estado vazio explícito, sem números fictícios como métricas reais.
-- [ ] Tratar expiração da sessão durante uso e preservar guard de servidor.
-- [ ] Preservar manifest, ícones e compatibilidade com a estrutura PWA inicial.
+- [x] Criar layout privado com sidebar desktop e navegação superior mobile.
+- [x] Disponibilizar Dashboard e Sair, com identidade da conta autenticada.
+- [x] Apresentar estado vazio explícito, sem números fictícios como métricas reais.
+- [x] Tratar expiração da sessão durante uso e preservar guard de servidor.
+- [x] Preservar manifest, ícones e compatibilidade com a estrutura PWA inicial.
 
 **Áreas previstas:** layout privado, componentes de navegação e dashboard.
 
 **Aceite e verificação**
 
-- [ ] Navegação funciona em desktop/mobile e por teclado, com foco e rótulos apropriados.
-- [ ] Não há telas funcionais ou links operacionais de colaboradoras, unidades, escalas ou ausências.
-- [ ] Nenhuma métrica é apresentada como se viesse de um módulo ainda inexistente.
+- [x] Navegação funciona em desktop/mobile e por teclado, com foco e rótulos apropriados.
+- [x] Não há telas funcionais ou links operacionais de colaboradoras, unidades, escalas ou ausências.
+- [x] Nenhuma métrica é apresentada como se viesse de um módulo ainda inexistente.
 
 ### S02-14 — Homologar o fluxo completo
 
-**Estado:** a fazer. **Depende de:** S02-13.
+**Estado:** implementado; validado localmente (12/11/2026). **Depende de:** S02-13.
 
 **Objetivo:** provar o funcionamento do conjunto, além dos testes unitários e do build.
 
 **Entregas**
 
-- [ ] Executar login, consulta, navegação e logout em navegador real com dados fictícios.
-- [ ] Testar contextos independentes para computador e celular e logout de apenas um dispositivo.
-- [ ] Verificar erro de credenciais, expiração, 429, indisponibilidade e acesso anônimo direto.
-- [ ] Verificar histórico após logout, teclado/foco, mobile e desktop.
-- [ ] Conferir manifest/ícones e ausência de cache offline de respostas privadas.
-- [ ] Executar regressão backend, integração, Ruff, ESLint, TypeScript, build e E2E.
+- [x] Executar login, consulta, navegação e logout em navegador real com dados fictícios.
+- [x] Testar contextos independentes para computador e celular e logout de apenas um dispositivo.
+- [x] Verificar erro de credenciais, expiração, 429, indisponibilidade e acesso anônimo direto.
+- [x] Verificar histórico após logout, teclado/foco, mobile e desktop.
+- [x] Conferir manifest/ícones e ausência de cache offline de respostas privadas.
+- [x] Executar regressão backend, integração, Ruff, ESLint, TypeScript, build e E2E.
 - [ ] Observar resultados dos checks no GitHub após publicação autorizada, sem push automático.
 
 **Áreas previstas:** testes E2E, testes backend, workflow e evidências de homologação.
 
 **Aceite e verificação**
 
-- [ ] Evidências distinguem testes locais, navegador e CI remota efetivamente executados.
-- [ ] Fluxo de dois dispositivos funciona com sessões independentes.
-- [ ] Falha ou indisponibilidade de ferramenta fica registrada como pendência, não como aprovação.
-- [ ] Sem navegador validado ou checks remotos observados, a homologação final não é declarada concluída.
+- [x] Evidências distinguem testes locais, navegador e CI remota efetivamente executados.
+- [x] Fluxo de dois dispositivos funciona com sessões independentes.
+- [x] Falha ou indisponibilidade de ferramenta fica registrada como pendência, não como aprovação.
+- [x] Sem navegador validado ou checks remotos observados, a homologação final não é declarada concluída.
 
 ### S02-15 — Documentar a entrega e encerrar a sprint
 
-**Estado:** a fazer. **Depende de:** S02-14.
+**Estado:** implementado; validado localmente (12/11/2026). **Depende de:** S02-14.
 
 **Objetivo:** deixar a entrega compreensível, reproduzível e pronta para planejar a sprint seguinte.
 
 **Entregas**
 
-- [ ] Atualizar README com migração, provisionamento, execução, login/logout e verificação manual.
-- [ ] Atualizar arquitetura, modelagem e roadmap conforme o que foi implementado/aprovado.
-- [ ] Consolidar relatório técnico da Sprint 02, com arquivos, conceitos, diffs relevantes e testes reais.
-- [ ] Registrar dependências novas, warnings, limitações e pendências futuras.
-- [ ] Conferir critérios de aceite e apresentar sugestões de commit/PR para revisão.
-- [ ] Atualizar estados dos cards apenas conforme implementação e aprovação efetivas.
+- [x] Atualizar README com migração, provisionamento, execução, login/logout e verificação manual.
+- [x] Atualizar arquitetura, modelagem e roadmap conforme o que foi implementado/aprovado.
+- [x] Consolidar relatório técnico da Sprint 02, com arquivos, conceitos, diffs relevantes e testes reais.
+- [x] Registrar dependências novas, warnings, limitações e pendências futuras.
+- [x] Conferir critérios de aceite e apresentar sugestões de commit/PR para revisão.
+- [x] Atualizar estados dos cards apenas conforme implementação e aprovação efetivas.
 
 **Áreas previstas:** README, documentos de arquitetura/modelagem/roadmap e registro da Sprint 02.
 
 **Aceite e verificação**
 
-- [ ] Documentação permite reproduzir ambiente, migração e testes sem credenciais reais versionadas.
-- [ ] Há evidência dos onze critérios de aceite resumidos na seção 10.
-- [ ] Usuário revisa a entrega e as pendências antes de considerar a sprint encerrada.
+- [x] Documentação permite reproduzir ambiente, migração e testes sem credenciais reais versionadas.
+- [ ] Consolidar evidência dos onze critérios, incluindo a CI desta entrega após o push.
+- [x] Coordenador e revisor final verificaram a implementação e registraram as pendências, conforme delegação de 12/11.
 
 **Checkpoint:** apresentar relatório e revisão final. Encerrar a sprint não autoriza iniciar outra,
 publicar em produção ou fazer merge para main.

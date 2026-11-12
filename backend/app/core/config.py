@@ -1,6 +1,6 @@
 from functools import lru_cache
 
-from pydantic import Field, field_validator
+from pydantic import Field, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy import URL
 
@@ -13,6 +13,9 @@ class Settings(BaseSettings):
     postgres_db: str = "recephub"
     postgres_user: str = "recephub"
     postgres_password: str = ""
+    auth_origin: str = "http://localhost:3000"
+    auth_secure_cookie: bool = False
+    environment: str = "development"
     cors_origins: list[str] = ["http://localhost:3000", "http://127.0.0.1:3000"]
 
     @field_validator("cors_origins")
@@ -34,6 +37,21 @@ class Settings(BaseSettings):
             ):
                 raise ValueError("CORS exige origens HTTP explícitas, sem caminho ou credenciais")
         return values
+
+    @property
+    def session_cookie_name(self) -> str:
+        return "__Host-recephub_session" if self.auth_secure_cookie else "recephub_session"
+
+    @model_validator(mode="after")
+    def validate_auth(self):
+        self.explicit_origins([self.auth_origin])
+        if self.environment == "production" and (
+            not self.auth_secure_cookie or not self.auth_origin.startswith("https://")
+        ):
+            raise ValueError("Produção exige AUTH_ORIGIN HTTPS e AUTH_SECURE_COOKIE=true")
+        if self.auth_secure_cookie and not self.auth_origin.startswith("https://"):
+            raise ValueError("Cookie seguro exige origem HTTPS")
+        return self
 
     @property
     def database_url(self) -> URL:

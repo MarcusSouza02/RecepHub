@@ -1,4 +1,8 @@
 # Resolved with Python 3.11; includes development tools.
+argon2-cffi==25.1.0
+argon2-cffi-bindings==26.1.0
+cffi==2.1.1
+pycparser==3.12
 Mako==1.4.3
 MarkupSafe==3.0.4
 Pygments==2.21.0
