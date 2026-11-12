@@ -78,7 +78,7 @@ jobs:
       - run: npm run build
 
   browser:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     services:
       postgres:
         image: postgres:17-bookworm
@@ -124,7 +124,10 @@ jobs:
           exit 1
       - run: npm run test:e2e
       - if: failure()
-        run: docker logs recephub-sprint02-api-test
+        run: |
+          if docker container inspect recephub-sprint02-api-test >/dev/null 2>&1; then
+            docker logs recephub-sprint02-api-test
+          fi
       - if: always()
         run: docker rm -f recephub-sprint02-api-test
 

@@ -153,6 +153,11 @@ Durante a integração, os testes detectaram e motivaram correções:
   preexistentes. Após limpar somente a conta fictícia, as suítes passaram em sequência.
 - O teste de indisponibilidade passou a esperar a hidratação e observar a resposta 503
   antes de conferir o aviso, evitando disparar foco antes da instalação do monitor.
+- A primeira CI desta entrega aprovou backend, frontend e segredos, mas o job browser
+  falhou em `playwright install --with-deps`, antes dos testes. O runner foi fixado em
+  Ubuntu 24.04 para manter compatibilidade com o Playwright fixado; `ubuntu-latest`
+  já anunciava migração para Ubuntu 26. O download do log detalhado pela API pública
+  foi recusado com 403, portanto o motivo interno da instalação não foi presumido.
 
 ## 6. Executar localmente
 
