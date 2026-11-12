@@ -14,6 +14,16 @@ o inventário de arquivos, as decisões de implementação, os testes realizados
 da validação e a preparação para a Sprint 02. Os resultados são históricos; os comandos
 documentados permitem reproduzi-los.
 
+## Sprint 02 — acompanhamento
+
+O [quadro de cards da Sprint 02](docs/09-sprint-02.md) organiza o planejamento aprovado em
+etapas, entregas, dependências e critérios de aceite. A implementação será autorizada e revisada
+por etapa; a existência do quadro não indica que a autenticação já foi implementada.
+
+A Etapa 1 está implementada e em revisão: modelos de conta/sessões, primeira migração
+e testes PostgreSQL. Consulte o [relatório da Etapa 1](docs/10-sprint-02-etapa-01.md)
+para arquivos, garantias, execução segura dos testes e resultados.
+
 ## Executar com Docker
 
 Pré-requisitos: Docker Desktop com engine Linux e Docker Compose v2. No Windows, mantenha
@@ -98,10 +108,15 @@ docker compose exec backend alembic current
 docker compose exec backend alembic check
 ```
 
-Ainda não existem revisões nem tabelas de domínio. O Alembic pode criar sua tabela técnica
-`alembic_version`. Para a primeira entidade futura, importe seus modelos em `alembic/env.py`
-antes de executar `alembic revision --autogenerate -m "descricao"`. Revise o arquivo gerado
-e aplique com `alembic upgrade head`. A API não executa `create_all` nem migrações no startup.
+Existe a revisão `0001_auth_foundation`, que cria somente `users` e `user_sessions`, sem
+provisionar contas. Os comandos acima aplicam a migração ao banco configurado: execute-os
+no desenvolvimento após revisar a entrega. Nesta validação, apenas o banco descartável
+da Sprint 02 recebeu a migração. A API não executa `create_all` nem migrações no startup.
+
+Os testes completos exigem `TEST_DATABASE_URL` explícita para PostgreSQL descartável,
+nome do banco terminado em `_test` e `TEST_DATABASE_ALLOW_RESET=1`, pois exercitam downgrade.
+Não use o banco de desenvolvimento. O procedimento antigo da Sprint 01 não contempla
+essas novas exigências; use o [procedimento da Etapa 1](docs/10-sprint-02-etapa-01.md).
 
 ## Execução sem Docker dos aplicativos
 
