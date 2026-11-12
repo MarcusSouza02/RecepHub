@@ -1,7 +1,5 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
-
 export async function checkApi(signal: AbortSignal): Promise<void> {
-  const response = await fetch(`${API_URL.replace(/\/$/, "")}/api/v1/health/ready`, {
+  const response = await fetch("/api/v1/health/ready", {
     signal,
     cache: "no-store",
     headers: { Accept: "application/json" },

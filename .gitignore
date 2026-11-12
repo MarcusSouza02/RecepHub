@@ -19,3 +19,6 @@ Thumbs.db
 .idea/
 .vscode/
 backups/
+frontend/playwright-report/
+frontend/test-results/
+frontend/blob-report/
