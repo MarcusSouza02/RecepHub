@@ -102,13 +102,17 @@ test("monitor detects real expiration when the page regains focus", async ({ pag
 test("monitor reports simulated outage without claiming logout", async ({ page }) => {
   await page.route("**/api/v1/auth/session", route => route.fulfill({ status: 503, contentType: "application/json", body: '{"detail":"simulated outage"}' }));
   await login(page);
+  await expect(page.getByRole("status").filter({ hasText: "API e banco de dados disponíveis" })).toBeVisible();
+  const revalidation = page.waitForResponse(response => response.url().endsWith("/api/v1/auth/session") && response.status() === 503);
   await page.evaluate(() => window.dispatchEvent(new Event("focus")));
+  await revalidation;
   await expect(page.getByRole("status").filter({ hasText: "Não foi possível verificar sua sessão" })).toBeVisible();
   await expect(page).toHaveURL("/dashboard");
 });
 test("device clock skew does not expire a valid session", async ({ page }) => {
   await page.addInitScript(() => { const realNow = Date.now.bind(Date); Date.now = () => realNow() + 4 * 60 * 60 * 1000; });
   await login(page);
+  await expect(page.getByRole("status").filter({ hasText: "API e banco de dados disponíveis" })).toBeVisible();
   const revalidation = page.waitForResponse(response => response.url().endsWith("/api/v1/auth/session"));
   await page.evaluate(() => window.dispatchEvent(new Event("focus")));
   expect((await revalidation).status()).toBe(200);

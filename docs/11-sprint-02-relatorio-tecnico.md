@@ -128,7 +128,7 @@ relatórios da Sprint 01 e da Etapa 1 preservam seus resultados históricos.
 | Backend completo | 95 testes aprovados em PostgreSQL 17/Python 3.11.18; 31,48 s. |
 | Ruff e formatação | Aprovados, 38 arquivos Python na verificação final. |
 | ESLint, TypeScript e build Next.js | Aprovados localmente. |
-| Navegador real | 18 testes aprovados, desktop/mobile, em 1,7 min; cobertura adicional de teclado/timer em validação final. |
+| Navegador real | 22 cenários validados em desktop/mobile. Última rodada completa: 20 aprovados e dois casos com sincronização de foco corrigida; rodada dirigida posterior: quatro aprovados em 27 s, incluindo esses dois casos e relógio. A primeira rodada de 18 casos também passou integralmente. |
 | Compose | `docker compose config --quiet` aprovado. |
 | Benchmark Argon2id no container | 404,9 / 416,8 / 340,3 ms; média aproximada 387 ms. Não é garantia de desempenho em produção. |
 | GitHub da Etapa 1 | Execuções de `e43fa0c` consultadas em 12/11: concluídas com sucesso. |
@@ -151,6 +151,8 @@ Durante a integração, os testes detectaram e motivaram correções:
 - Seletor de alertas foi distinguido do anunciador de rotas do Next.js.
 - Uma execução simultânea de backend/navegador foi recusada pela proteção contra dados
   preexistentes. Após limpar somente a conta fictícia, as suítes passaram em sequência.
+- O teste de indisponibilidade passou a esperar a hidratação e observar a resposta 503
+  antes de conferir o aviso, evitando disparar foco antes da instalação do monitor.
 
 ## 6. Executar localmente
 
