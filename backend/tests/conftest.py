@@ -9,6 +9,7 @@ from sqlalchemy.pool import NullPool
 from alembic import command
 from app.core.config import Settings
 from app.main import create_app
+from app.models import Base
 from tests.database import migration_config, require_test_database_reset, validate_test_database_url
 
 
@@ -45,11 +46,11 @@ def migrated_database(postgres_engine):
     require_test_database_reset(os.getenv("TEST_DATABASE_ALLOW_RESET"))
     with postgres_engine.begin() as connection:
         existing = set(inspect(connection).get_table_names(schema="public"))
-        expected = {"users", "user_sessions", "alembic_version"}
+        expected = set(Base.metadata.tables) | {"alembic_version"}
         if existing - expected:
             pytest.fail("Banco de teste contém tabelas inesperadas; nenhuma migração foi executada")
         # Recusar banco populado, mesmo com nome de teste: nunca apagar registros preexistentes.
-        for table in ("users", "user_sessions"):
+        for table in Base.metadata.tables:
             if (
                 table in existing
                 and connection.execute(text(f"SELECT count(*) FROM {table}")).scalar()
