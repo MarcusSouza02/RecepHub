@@ -13,6 +13,7 @@ const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 type OperationRoute = { methods: string[]; upstream: string; query: "units" | "employees" | "team" | null };
 function operationRoute(path: string[]): OperationRoute | null {
   const [resource, id, child] = path;
+  if (path.length === 2 && resource === "dashboard" && id === "summary") return { methods: ["GET"], upstream: "/api/v1/dashboard/summary", query: null };
   if (resource !== "units" && resource !== "employees") return null;
   if (path.length === 1) return { methods: ["GET", "POST"], upstream: `/api/v1/${resource}`, query: resource };
   if (!uuid.test(id ?? "")) return null;

@@ -11,6 +11,24 @@ temporária do sistema. O coordenador também inspecionou a captura de Unidades 
 
 ## Tokens e componentes observados
 
+### Conferência da implementação local — 13/11/2026
+
+A homologação visual local produziu dez capturas reais em 1440×1000 e 390×844,
+cobrindo dashboard, listagem de unidades, colaboradoras e editor semanal. Não foram
+observados overflow horizontal nem erros de página. O acesso por Tab tornou visível
+o link de pular para o conteúdo. As capturas estão na pasta temporária do sistema,
+sem versionamento ou dados reais.
+
+Indicadores foram conferidos no DOM e na API: estado vazio → uma unidade ativa →
+uma colaboradora ativa → unidade inativa mantendo o vínculo → colaboradora sem unidade
+após desvinculação explícita. A contagem de unidades caiu para zero na inativação;
+o vínculo não foi removido silenciosamente e o indicador sem unidade passou a um
+somente após a desvinculação.
+
+Essa validação comprova o comportamento e o layout local das telas observadas.
+Formulários e editor do protótipo continuam sem inspeção de referência; não se afirma
+comparação visual direta dessas telas com o Lovable.
+
 | Elemento | Observação |
 |---|---|
 | Fundo | Creme, oklch(97.5% .018 78) |

@@ -17,8 +17,8 @@ documentados permitem reproduzi-los.
 ## Sprint 02 — acompanhamento
 
 O [quadro de cards da Sprint 02](docs/09-sprint-02.md) organiza o planejamento aprovado em
-etapas, entregas, dependências e critérios de aceite. A implementação será autorizada e revisada
-por etapa; a existência do quadro não indica que a autenticação já foi implementada.
+etapas, entregas, dependências e critérios de aceite. A implementação foi concluída,
+com CI final aprovada em `df1dece`, [execução 43332310079](https://github.com/MarcusSouza02/RecepHub/actions/runs/43332310079).
 
 Em 12/11/2026, o usuário autorizou a execução coordenada das etapas restantes com
 subagentes, revisão final e publicação em `dev`. Login, logout, proteção de páginas,
@@ -44,11 +44,27 @@ Para usar `127.0.0.1`, outro host ou porta, configure a mesma origem no frontend
 `BACKEND_INTERNAL_URL` é exclusivo do servidor Next.js; o Compose usa `http://backend:8000`.
 Em produção, configure `ENVIRONMENT=production`, `AUTH_ORIGIN=https://seu-host` e
 `AUTH_SECURE_COOKIE=true`. Não existe senha ou conta padrão; nenhuma conta real foi criada
-automaticamente nesta entrega. O dashboard está vazio até as próximas sprints operacionais.
+automaticamente nesta entrega. A Sprint 03 amplia essa base com cadastros e horários.
 
 A Etapa 1 foi implementada e publicada: modelos de conta/sessões, primeira migração
 e testes PostgreSQL. Consulte o [relatório da Etapa 1](docs/10-sprint-02-etapa-01.md)
 para arquivos, garantias, execução segura dos testes e resultados.
+
+## Sprint 03 — validada localmente, CI pendente
+
+Cadastros de unidades e colaboradoras, vínculos habituais opcionais e horários semanais
+foram implementados sobre a autenticação existente. Consulte o [plano e cards](docs/12-sprint-03.md),
+a [referência visual](docs/13-sprint-03-referencia-visual.md) e o
+[relatório técnico](docs/14-sprint-03-relatorio-tecnico.md) para arquivos, contratos,
+roteiro manual e evidências de validação. Backend: 153 testes aprovados em PostgreSQL
+descartável, com um warning conhecido. Lint, TypeScript e build aprovados. No navegador,
+26 cenários passaram na primeira execução e dois após correção dos seletores; revisão
+independente concluída. Publicação e CI da Sprint 03 ainda estão em andamento. Não há escalas por data, ausências ou IA nesta sprint.
+
+Após atualizar as imagens e aplicar `alembic upgrade head`, acesse `/units` e `/employees`
+com sessão válida. O editor semanal fica nos detalhes da colaboradora. Inativação preserva
+registros e vínculos; novos vínculos exigem unidade ativa. Minutos são previstos por
+aritmética, sem validação trabalhista. Uma semana incompleta não tem total definitivo.
 
 ## Executar com Docker
 
@@ -72,8 +88,8 @@ os mesmos valores fictícios locais do exemplo. Nunca reutilize esses valores em
 | API + PostgreSQL | http://localhost:8000/api/v1/health/ready |
 | Swagger | http://localhost:8000/docs |
 
-O indicador da página consulta a API pelo navegador. `NEXT_PUBLIC_API_URL` deve ser um endereço
-acessível pelo navegador, e não o nome interno `backend`. Dentro do Docker, a API usa
+O navegador consulta prontidão e operações pelo proxy de mesma origem do Next.js.
+`BACKEND_INTERNAL_URL` identifica a API apenas no servidor. Dentro do Docker, a API usa
 `postgres:5432`. O banco não publica porta no host; frontend e API escutam apenas em `127.0.0.1`.
 
 ```sh
@@ -134,10 +150,11 @@ docker compose exec backend alembic current
 docker compose exec backend alembic check
 ```
 
-Existe a revisão `0001_auth_foundation`, que cria somente `users` e `user_sessions`, sem
-provisionar contas. Os comandos acima aplicam a migração ao banco configurado: execute-os
-no desenvolvimento após revisar a entrega. Nesta validação, apenas o banco descartável
-da Sprint 02 recebeu a migração. A API não executa `create_all` nem migrações no startup.
+A cadeia começa em `0001_auth_foundation` (conta/sessões) e a Sprint 03 acrescenta
+`0002_units`, `0003_employees` e `0004_employee_work_patterns`, sem provisionar contas
+ou inserir dados reais. Os comandos acima aplicam migrações ao banco configurado:
+confira o destino antes de executá-los. A API não executa `create_all` nem migrações
+no startup. Nunca faça downgrade no banco de desenvolvimento para reproduzir testes.
 
 Os testes completos exigem `TEST_DATABASE_URL` explícita para PostgreSQL descartável,
 nome do banco terminado em `_test` e `TEST_DATABASE_ALLOW_RESET=1`, pois exercitam downgrade.
@@ -166,8 +183,8 @@ npm ci
 npm run dev
 ```
 
-Use `NEXT_PUBLIC_API_URL` no shell ou em `frontend/.env.local` se precisar mudar a URL pública
-da API. Variáveis `NEXT_PUBLIC_*` são públicas e incorporadas no build: nunca coloque segredos nelas.
+Configure `BACKEND_INTERNAL_URL` no shell ou em `frontend/.env.local` para o destino
+interno da API e `AUTH_ORIGIN` para a origem exata do frontend. Variáveis `NEXT_PUBLIC_*` são públicas e incorporadas no build: nunca coloque segredos nelas.
 
 ## Estrutura e dependências
 

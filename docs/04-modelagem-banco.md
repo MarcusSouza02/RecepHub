@@ -1,17 +1,18 @@
 # RecepHub — Modelagem Inicial do Banco de Dados
 
-**Versão:** 1.4
-**Data:** 12/11/2026
-**Status:** Persistência e serviços de autenticação implementados na Sprint 02. Demais entidades são propostas; regras de jornada e cobertura pendentes de validação.
+**Versão:** 1.5
+**Data:** 13/11/2026
+**Status:** autenticação implementada; unidades, colaboradoras e horários normalizados em integração na Sprint 03. Ausências e escalas permanecem propostas.
 
 ## 1. Objetivo e princípios
 
 Modelo PostgreSQL enxuto para **uma usuária**. Permite gerar escalas a partir das unidades e jornadas habituais, registrar exceções por data, gerenciar férias/folgas e publicar uma escala completa de modo consistente. Não usa tabela de guichês fixos, não armazena dados de pacientes e não exige persistência de e-mails ou mensagens de IA.
 
-## 2. Tabelas previstas (7)
+## 2. Tabelas implementadas e propostas (8)
 
-Somente `users` e `user_sessions` possuem modelos e migração nesta entrega. A revisão
-`0001_auth_foundation` não cria as outras cinco tabelas nem cadastra uma conta.
+A Sprint 02 criou `users` e `user_sessions`. A Sprint 03 acrescenta `units`,
+`employees` e `employee_work_patterns`, sem contas ou dados reais. `absences`,
+`schedule_days` e `schedule_assignments` continuam propostas, sem migrações.
 
 ### 2.1 `users`
 - `id` UUID PK
@@ -37,7 +38,11 @@ com comando interativo e sem conta/senha padrão. A migração continua sem seed
 - `name` VARCHAR(120) NOT NULL
 - `city` VARCHAR(120) NULL
 - `active` BOOLEAN NOT NULL DEFAULT TRUE
-- `coverage_rules` JSONB NULL — **opcional**, estrutura versionada/validada, apenas quando a regra de cobertura for definida
+- `description` VARCHAR(500) NULL
+- `updated_at` TIMESTAMPTZ NOT NULL
+
+Nome não vazio; nomes iguais permitidos. Inativação lógica por `active`, sem DELETE.
+`coverage_rules` não faz parte do esquema implementado.
 - `created_at` TIMESTAMPTZ NOT NULL
 
 A distribuição habitual **não** será interpretada automaticamente como cobertura mínima. Caso regras de cobertura ganhem complexidade, extrair para `staffing_requirements` por migração.
@@ -46,22 +51,30 @@ A distribuição habitual **não** será interpretada automaticamente como cober
 - `id` UUID PK
 - `display_name` VARCHAR(140) NOT NULL
 - `home_unit_id` UUID NULL FK → `units.id`
-- `regular_schedule` JSONB NOT NULL DEFAULT '{}'::jsonb — dias, entrada, saída e intervalo usuais, validados por Pydantic
+- `notes` VARCHAR(500) NULL — observações operacionais
 - `active` BOOLEAN NOT NULL DEFAULT TRUE
 - `created_at` TIMESTAMPTZ NOT NULL
 - `updated_at` TIMESTAMPTZ NOT NULL
 
-Exemplo **fictício** de `regular_schedule` (formato provisório):
+A proposta inicial de JSONB foi substituída pela tabela normalizada aprovada na Sprint 03.
+A FK opcional para unidade usa RESTRICT; inativar unidade preserva vínculos existentes.
+Novos vínculos exigem unidade ativa. Nomes homônimos são permitidos.
 
-```json
-{
-  "mon": {"start": "07:00", "end": "16:00", "break_start": "11:00", "break_end": "12:00"},
-  "tue": {"start": "07:00", "end": "16:00", "break_start": "11:00", "break_end": "12:00"},
-  "sat": {"start": "08:00", "end": "12:00", "break_start": null, "break_end": null}
-}
-```
+### 2.3.1 `employee_work_patterns`
 
-Dias não presentes são considerados sem jornada habitual. Horários que cruzam meia-noite exigirão decisão explícita antes de suporte.
+- `id` UUID PK; `employee_id` UUID FK → `employees.id` ON DELETE CASCADE.
+- `weekday` inteiro de 0 (segunda) a 6 (domingo); único por colaboradora/dia.
+- `state`: `pending`, `working` ou `non_working`.
+- `start_time`, `end_time`, `break_start_time`, `break_end_time`: TIME opcionais, precisão de minuto, sem fuso.
+- `created_at` e `updated_at`: TIMESTAMPTZ.
+
+Sete dias são criados como pendentes para novas colaboradoras e preenchidos na migração
+para cadastros anteriores. Estados pendente/sem trabalho não admitem horários. Jornada
+incompleta pode ser salva; comparações conhecidas devem respeitar início/fim e intervalo
+contido. Não há virada de dia. O PUT substitui a semana atomicamente sob bloqueio da
+colaboradora. Subtotal soma dias completos; total semanal é nulo enquanto houver pendências.
+
+No modelo atual, dia ausente nunca é interpretado como folga: a semana exige sete dias explícitos. Horários que cruzam meia-noite não são suportados.
 
 ### 2.4 `absences`
 - `id` UUID PK
@@ -116,20 +129,21 @@ a apresentação do fuso depende da conexão, sem armazenar o nome de um fuso.
 
 ## 3. Semântica da escala-base e das exceções
 
-1. **Dia sem `schedule_days`:** gerar visualização virtual da escala-base a partir de `employees.home_unit_id`, `regular_schedule` e `absences`.
+1. **Dia sem `schedule_days`:** gerar visualização virtual da escala-base a partir de `employees.home_unit_id`, `employee_work_patterns` e `absences`.
 2. **Primeira alteração:** criar `schedule_days` e suas `schedule_assignments` com uma fotografia da base; aplicar a mudança à fotografia.
 3. **Dia já materializado:** usar somente suas linhas concretas, inclusive se alguma colaboradora tiver sido removida. Não reconstruir automaticamente linhas excluídas.
 4. **Nova ausência sobre escala existente:** detectar conflito e exigir resolução antes da publicação. Não remover silenciosamente alocações que a usuária já ajustou.
 5. **Publicação:** validar o conjunto inteiro, atualizar `schedule_days.status` em transação e expor a versão publicada nas exportações. Edição posterior pode retornar o dia a `DRAFT`, segundo política a validar; o histórico completo de versões fica pós-MVP.
 6. **Atualização de jornada habitual:** vale para os dias ainda não materializados. Dias materializados não são reescritos sem escolha explícita.
 
-O modelo original de seis tabelas, agora acrescido de `user_sessions`, evita a ambiguidade entre “nenhuma exceção” e “retirada deliberada da escala”. A definição operacional de publicação e edição de uma escala já publicada deverá ser validada com a usuária.
+O modelo original de seis tabelas, agora acrescido de `user_sessions` e `employee_work_patterns`, evita a ambiguidade entre “nenhuma exceção” e “retirada deliberada da escala”. A definição operacional de publicação e edição de uma escala já publicada deverá ser validada com a usuária.
 
 ## 4. Relacionamentos
 
 - `units` 1:N `employees` (origem habitual)
 - `users` 1:N `user_sessions`, com exclusão em cascata
-- `employees` 1:N `absences`
+- `employees` 1:N `employee_work_patterns` (sete dias explícitos)
+- `employees` 1:N `absences` (proposta)
 - `schedule_days` 1:N `schedule_assignments`
 - `employees` 1:N `schedule_assignments`
 - `units` 1:N `schedule_assignments`
@@ -167,7 +181,7 @@ O modelo original de seis tabelas, agora acrescido de `user_sessions`, evita a a
 
 ## 9. Decisões pendentes
 
-- Jornada de segunda a sábado, intervalos e eventuais viradas de dia.
+- Jornadas reais e regras contratuais continuam a validar; a Sprint 03 permite configurar sete dias explicitamente e calcular minutos previstos. Viradas de dia exigem evolução futura.
 - Regras e mínimos de cobertura; se há exceções justificáveis para impedimentos.
 - Comportamento após editar uma escala já publicada e necessidade de identificar a última versão enviada.
 - Autorização para uso de dados reais em infraestrutura pessoal.
