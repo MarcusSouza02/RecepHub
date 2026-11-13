@@ -3,10 +3,11 @@ from uuid import uuid4
 
 import pytest
 from alembic.migration import MigrationContext
+from alembic.script import ScriptDirectory
 from sqlalchemy import inspect, text
 
 from alembic import command
-from app.models import User, UserSession
+from app.models import Base, User, UserSession
 from tests.database import migration_config
 
 pytestmark = pytest.mark.integration
@@ -16,13 +17,12 @@ def test_upgrade_downgrade_upgrade_with_data(migrated_database):
     with migrated_database.begin() as connection:
         config = migration_config(connection)
         command.upgrade(config, "head")
-        assert set(inspect(connection).get_table_names()) == {
-            "alembic_version",
-            "users",
-            "user_sessions",
+        assert set(inspect(connection).get_table_names()) == set(Base.metadata.tables) | {
+            "alembic_version"
         }
         assert (
-            MigrationContext.configure(connection).get_current_revision() == "0001_auth_foundation"
+            MigrationContext.configure(connection).get_current_revision()
+            == ScriptDirectory.from_config(config).get_current_head()
         )
         command.check(config)
 
@@ -52,7 +52,8 @@ def test_upgrade_downgrade_upgrade_with_data(migrated_database):
         command.upgrade(config, "head")
         command.check(config)
         assert (
-            MigrationContext.configure(connection).get_current_revision() == "0001_auth_foundation"
+            MigrationContext.configure(connection).get_current_revision()
+            == ScriptDirectory.from_config(config).get_current_head()
         )
-        for table in ("users", "user_sessions"):
+        for table in Base.metadata.tables:
             assert connection.execute(text(f"SELECT count(*) FROM {table}")).scalar_one() == 0
