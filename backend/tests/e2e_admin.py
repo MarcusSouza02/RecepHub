@@ -8,7 +8,7 @@ from sqlalchemy import create_engine, delete, select, update
 from sqlalchemy.orm import Session
 
 from app.core.security import utcnow
-from app.models import User, UserSession
+from app.models import Employee, EmployeeWorkPattern, Unit, User, UserSession
 from app.services.auth import AuthService
 from tests.database import require_test_database_reset, validate_test_database_url
 
@@ -26,6 +26,12 @@ def main():
                 db.execute(delete(User).where(User.username == "e2e.demo"))
                 db.commit()
             elif sys.argv[1] == "reset":
+                # Operational fixtures belong only to the explicitly named new browser database.
+                if url.database == "recephub_sprint03_browser_test":
+                    db.execute(delete(EmployeeWorkPattern))
+                    db.execute(delete(Employee))
+                    db.execute(delete(Unit))
+                    db.commit()
                 if user is None:
                     AuthService(db).provision("e2e.demo", "Browser-fictional-password-123!")
                 else:
