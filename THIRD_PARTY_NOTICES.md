@@ -24,3 +24,8 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+
+## Manrope and Sora fonts
+
+Locally hosted variable fonts from the official [Google Fonts repository](https://github.com/google/fonts), distributed under the SIL Open Font License 1.1. Copyright and complete license texts accompany the fonts in `frontend/public/fonts/manrope-OFL.txt` and `sora-OFL.txt`. No remote font request is made at runtime.
