@@ -9,18 +9,44 @@ const routes = new Map([
   ["health/ready", { method: "GET", upstream: "/api/v1/health/ready" }],
 ]);
 type Context = { params: Promise<{ path: string[] }> };
+const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+type OperationRoute = { methods: string[]; upstream: string; query: "units" | "employees" | "team" | null };
+function operationRoute(path: string[]): OperationRoute | null {
+  const [resource, id] = path;
+  if (resource !== "units") return null;
+  if (path.length === 1) return { methods: ["GET", "POST"], upstream: `/api/v1/${resource}`, query: resource };
+  if (!uuid.test(id ?? "")) return null;
+  if (path.length === 2) return { methods: ["GET", "PATCH"], upstream: `/api/v1/${resource}/${id}`, query: null };
+  return null;
+}
+function validQuery(params: URLSearchParams, kind: OperationRoute["query"]) {
+  const seen = new Set<string>();
+  for (const [key, value] of params) {
+    if (seen.has(key) || !kind) return false;
+    seen.add(key);
+    if (key === "q") { if (value.length > (kind === "units" ? 120 : 140)) return false; }
+    else if (key === "status") { if (!["active", "inactive", "all"].includes(value)) return false; }
+    else if (key === "page" || key === "page_size") { if (!/^[1-9]\d*$/.test(value) || !Number.isSafeInteger(Number(value)) || (key === "page_size" && Number(value) > 100)) return false; }
+    else if (kind === "employees" && key === "home_unit_id") { if (!uuid.test(value)) return false; }
+    else if (kind === "employees" && key === "without_home_unit") { if (!["true", "false"].includes(value)) return false; }
+    else return false;
+  }
+  return !(seen.has("home_unit_id") && seen.has("without_home_unit"));
+}
 function error(detail: string, status: number, allow?: string) {
   return NextResponse.json({ detail }, { status, headers: { "Cache-Control": "private, no-store", ...(allow ? { Allow: allow } : {}) } });
 }
 async function proxy(request: NextRequest, context: Context) {
   const { path } = await context.params;
-  const route = routes.get(path.join("/"));
+  const authRoute = routes.get(path.join("/"));
+  const route: OperationRoute | null = authRoute ? { methods: [authRoute.method], upstream: authRoute.upstream, query: null } : operationRoute(path);
   if (!route) return error("Não encontrado", 404);
-  if (request.method !== route.method) return error("Método não permitido", 405, route.method);
+  if (!route.methods.includes(request.method)) return error("Método não permitido", 405, route.methods.join(", "));
+  if (!authRoute && !validQuery(request.nextUrl.searchParams, request.method === "GET" ? route.query : null)) return error("Filtros inválidos", 422);
   const config = authConfig();
   const headers = new Headers({ Accept: "application/json" });
   let body: ArrayBuffer | undefined;
-  if (request.method === "POST") {
+  if (["POST", "PATCH", "PUT"].includes(request.method)) {
     if (request.headers.get("origin") !== config.origin || request.headers.get("x-recephub-csrf") !== "1") return error("Origem ou proteção CSRF inválida", 403);
     if (request.headers.get("content-type")?.split(";")[0].trim().toLowerCase() !== "application/json") return error("Envie application/json", 415);
     const reader = request.body?.getReader();
@@ -48,6 +74,7 @@ async function proxy(request: NextRequest, context: Context) {
   if (cookie && /^[A-Za-z0-9_-]{43}$/.test(cookie.value)) headers.set("Cookie", `${config.cookieName}=${cookie.value}`);
   try {
     const target = new URL(route.upstream, config.backend);
+    if (!authRoute) target.search = request.nextUrl.search;
     if (!["http:", "https:"].includes(target.protocol) || target.username || target.password) return error("Serviço indisponível", 503);
     const upstream = await fetch(target, { method: request.method, headers, body, cache: "no-store", redirect: "manual", signal: AbortSignal.timeout(5000) });
     if (upstream.status >= 300 && upstream.status < 400) return error("Serviço indisponível", 502);
