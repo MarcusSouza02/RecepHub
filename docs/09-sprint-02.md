@@ -2,7 +2,9 @@
 
 **Tema:** autenticação e acesso ao sistema
 **Data de organização:** 04/11/2026
-**Situação:** implementação coordenada das Etapas 1–5 autorizada em 12/11/2026; validação final em andamento.
+**Situação:** implementação e validação técnica concluídas; CI de `df1dece` aprovada, incluindo Compose.
+
+Evidência final: [execução 43332310079](https://github.com/MarcusSouza02/RecepHub/actions/runs/43332310079). Os resultados locais abaixo permanecem como histórico da entrega.
 
 ### Condução atual — autorização de 12/11/2026
 
@@ -51,21 +53,21 @@ Entrega implementada e testada vai para revisão; só a aprovação da pessoa re
 | Card | Etapa | Entrega | Dependências técnicas | Estado atual |
 |---|---|---|---|---|
 | [S02-00](#s02-00--consolidar-o-planejamento-técnico) | 0 | Planejamento e decisões | — | Concluído: planejamento aprovado |
-| [S02-01](#s02-01--modelar-a-conta-administrativa) | 1 | Modelo User | S02-00 | Validado localmente; CI final pendente |
-| [S02-02](#s02-02--modelar-as-sessões) | 1 | Modelo UserSession | S02-01 | Validado localmente; CI final pendente |
-| [S02-03](#s02-03--criar-e-validar-a-primeira-migração) | 1 | Migração e testes de persistência | S02-01, S02-02 | Validado localmente; CI final pendente |
-| [S02-04](#s02-04--implementar-hash-e-provisionamento-administrativo) | 2 | Argon2id e procedimento administrativo | S02-03 | Validado localmente; CI final pendente |
-| [S02-05](#s02-05--implementar-login-e-criação-da-sessão) | 2 | Login e cookie | S02-04 | Validado localmente; CI final pendente |
-| [S02-06](#s02-06--consultar-e-encerrar-a-sessão) | 2 | Consulta de sessão e logout | S02-05 | Validado localmente; CI final pendente |
-| [S02-07](#s02-07--consolidar-as-defesas-de-acesso-e-csrf) | 3 | Proteção, expiração e CSRF | S02-06 | Validado localmente; CI final pendente |
-| [S02-08](#s02-08--limitar-tentativas-de-login) | 3 | Limite persistente de tentativas | S02-07 | Validado localmente; CI final pendente |
-| [S02-09](#s02-09--consolidar-a-integração-e-os-checks-do-backend) | 3 | Integração e CI do backend | S02-07, S02-08 | Validado localmente; CI final pendente |
-| [S02-10](#s02-10--criar-o-proxy-de-mesma-origem) | 4 | Proxy Next.js | S02-09 | Validado localmente; CI final pendente |
-| [S02-11](#s02-11--criar-a-interface-de-login) | 4 | Formulário de login | S02-10 | Validado localmente; CI final pendente |
-| [S02-12](#s02-12--proteger-a-navegação-e-integrar-o-logout) | 4 | Guard de sessão e navegação | S02-11 | Validado localmente; CI final pendente |
-| [S02-13](#s02-13--montar-o-layout-privado-e-o-dashboard-vazio) | 5 | Área privada responsiva | S02-12 | Validado localmente; CI final pendente |
-| [S02-14](#s02-14--homologar-o-fluxo-completo) | 5 | Navegador, E2E e checks | S02-13 | Validado localmente; CI final pendente |
-| [S02-15](#s02-15--documentar-a-entrega-e-encerrar-a-sprint) | 5 | Relatório e revisão final | S02-14 | Validado localmente; CI final pendente |
+| [S02-01](#s02-01--modelar-a-conta-administrativa) | 1 | Modelo User | S02-00 | Concluído: validação local e CI final aprovadas |
+| [S02-02](#s02-02--modelar-as-sessões) | 1 | Modelo UserSession | S02-01 | Concluído: validação local e CI final aprovadas |
+| [S02-03](#s02-03--criar-e-validar-a-primeira-migração) | 1 | Migração e testes de persistência | S02-01, S02-02 | Concluído: validação local e CI final aprovadas |
+| [S02-04](#s02-04--implementar-hash-e-provisionamento-administrativo) | 2 | Argon2id e procedimento administrativo | S02-03 | Concluído: validação local e CI final aprovadas |
+| [S02-05](#s02-05--implementar-login-e-criação-da-sessão) | 2 | Login e cookie | S02-04 | Concluído: validação local e CI final aprovadas |
+| [S02-06](#s02-06--consultar-e-encerrar-a-sessão) | 2 | Consulta de sessão e logout | S02-05 | Concluído: validação local e CI final aprovadas |
+| [S02-07](#s02-07--consolidar-as-defesas-de-acesso-e-csrf) | 3 | Proteção, expiração e CSRF | S02-06 | Concluído: validação local e CI final aprovadas |
+| [S02-08](#s02-08--limitar-tentativas-de-login) | 3 | Limite persistente de tentativas | S02-07 | Concluído: validação local e CI final aprovadas |
+| [S02-09](#s02-09--consolidar-a-integração-e-os-checks-do-backend) | 3 | Integração e CI do backend | S02-07, S02-08 | Concluído: validação local e CI final aprovadas |
+| [S02-10](#s02-10--criar-o-proxy-de-mesma-origem) | 4 | Proxy Next.js | S02-09 | Concluído: validação local e CI final aprovadas |
+| [S02-11](#s02-11--criar-a-interface-de-login) | 4 | Formulário de login | S02-10 | Concluído: validação local e CI final aprovadas |
+| [S02-12](#s02-12--proteger-a-navegação-e-integrar-o-logout) | 4 | Guard de sessão e navegação | S02-11 | Concluído: validação local e CI final aprovadas |
+| [S02-13](#s02-13--montar-o-layout-privado-e-o-dashboard-vazio) | 5 | Área privada responsiva | S02-12 | Concluído: validação local e CI final aprovadas |
+| [S02-14](#s02-14--homologar-o-fluxo-completo) | 5 | Navegador, E2E e checks | S02-13 | Concluído: validação local e CI final aprovadas |
+| [S02-15](#s02-15--documentar-a-entrega-e-encerrar-a-sprint) | 5 | Relatório e revisão final | S02-14 | Concluído: validação local e CI final aprovadas |
 
 Dependência técnica satisfeita **não autoriza avanço**: ao terminar uma etapa, apresentar
 resultados e diffs e aguardar autorização explícita para a próxima. Se for autorizado somente
@@ -177,7 +179,7 @@ no plano de execução da etapa, sem confundir com os ciclos destrutivos do banc
 65 testes passaram em PostgreSQL 17 descartável, incluindo upgrade/downgrade/upgrade
 e `alembic check`; Ruff e formatação passaram. Banco de desenvolvimento não migrado.
 Arquivos, comandos, diffs e limitações: [relatório da Etapa 1](10-sprint-02-etapa-01.md).
-A aprovação dos três cards e o início da Etapa 2 aguardam revisão e autorização explícita.
+A aprovação e o avanço foram delegados ao coordenador em 12/11/2026; a implementação das etapas seguintes e a CI final foram concluídas.
 
 ## 5. Etapa 2 — Autenticação backend
 
@@ -466,7 +468,7 @@ resultados de testes e documentação de encerramento.
 - [x] Verificar histórico após logout, teclado/foco, mobile e desktop.
 - [x] Conferir manifest/ícones e ausência de cache offline de respostas privadas.
 - [x] Executar regressão backend, integração, Ruff, ESLint, TypeScript, build e E2E.
-- [ ] Observar resultados dos checks no GitHub após publicação autorizada, sem push automático.
+- [x] Observar resultados dos checks no GitHub após publicação autorizada: `df1dece`, execução 43332310079 aprovada.
 
 **Áreas previstas:** testes E2E, testes backend, workflow e evidências de homologação.
 
@@ -497,7 +499,7 @@ resultados de testes e documentação de encerramento.
 **Aceite e verificação**
 
 - [x] Documentação permite reproduzir ambiente, migração e testes sem credenciais reais versionadas.
-- [ ] Consolidar evidência dos onze critérios, incluindo a CI desta entrega após o push.
+- [x] Consolidar evidência dos onze critérios, incluindo CI aprovada de `df1dece` após publicação.
 - [x] Coordenador e revisor final verificaram a implementação e registraram as pendências, conforme delegação de 12/11.
 
 **Checkpoint:** apresentar relatório e revisão final. Encerrar a sprint não autoriza iniciar outra,
