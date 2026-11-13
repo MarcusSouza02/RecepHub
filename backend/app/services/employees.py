@@ -4,6 +4,7 @@ from app.models.employee import Employee
 from app.models.unit import Unit
 from app.repositories.employees import EmployeeRepository
 from app.services.auth import AuthError
+from app.services.work_patterns import create_initial_pattern
 
 
 def representation(employee):
@@ -57,6 +58,7 @@ class EmployeeService:
         employee = Employee(**values)
         self.db.add(employee)
         self.db.flush()
+        create_initial_pattern(self.db, employee)
         self.db.commit()
         return representation(self.get(employee.id))
 

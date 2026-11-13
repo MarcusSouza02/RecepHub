@@ -18,6 +18,7 @@ function operationRoute(path: string[]): OperationRoute | null {
   if (!uuid.test(id ?? "")) return null;
   if (path.length === 2) return { methods: ["GET", "PATCH"], upstream: `/api/v1/${resource}/${id}`, query: null };
   if (path.length === 3 && resource === "units" && child === "employees") return { methods: ["GET"], upstream: `/api/v1/units/${id}/employees`, query: "team" };
+  if (path.length === 3 && resource === "employees" && child === "work-patterns") return { methods: ["GET", "PUT"], upstream: `/api/v1/employees/${id}/work-patterns`, query: null };
   return null;
 }
 function validQuery(params: URLSearchParams, kind: OperationRoute["query"]) {
