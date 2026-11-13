@@ -12,11 +12,12 @@ type Context = { params: Promise<{ path: string[] }> };
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 type OperationRoute = { methods: string[]; upstream: string; query: "units" | "employees" | "team" | null };
 function operationRoute(path: string[]): OperationRoute | null {
-  const [resource, id] = path;
-  if (resource !== "units") return null;
+  const [resource, id, child] = path;
+  if (resource !== "units" && resource !== "employees") return null;
   if (path.length === 1) return { methods: ["GET", "POST"], upstream: `/api/v1/${resource}`, query: resource };
   if (!uuid.test(id ?? "")) return null;
   if (path.length === 2) return { methods: ["GET", "PATCH"], upstream: `/api/v1/${resource}/${id}`, query: null };
+  if (path.length === 3 && resource === "units" && child === "employees") return { methods: ["GET"], upstream: `/api/v1/units/${id}/employees`, query: "team" };
   return null;
 }
 function validQuery(params: URLSearchParams, kind: OperationRoute["query"]) {
