@@ -1,8 +1,8 @@
 # RecepHub — Arquitetura Técnica
 
-**Versão:** 1.2
-**Data:** 12/11/2026
-**Status:** Autenticação implementada na Sprint 02; módulos operacionais e IA continuam propostos.
+**Versão:** 1.3
+**Data:** 13/11/2026
+**Status:** autenticação implementada; cadastros e horários em integração na Sprint 03. Escalas, ausências, cobertura e IA permanecem propostas.
 
 ## 1. Objetivo arquitetural
 
@@ -44,7 +44,9 @@ Entregar PWA responsivo para uma usuária, com escalas predefinidas, exceções 
 
 Não existe integração autenticada com Outlook ou WhatsApp no MVP. A integração de IA ocorre **somente no backend**; a chave nunca é enviada ao navegador.
 
-Na Sprint 02, somente autenticação, infraestrutura e dashboard vazio estão implementados.
+A Sprint 02 entregou autenticação, infraestrutura e dashboard vazio. A Sprint 03
+acrescenta unidades, colaboradoras, horários habituais normalizados e resumo cadastral
+real, mantendo modelos → repositórios → serviços → rotas e features no frontend.
 O guard de servidor consulta a sessão no FastAPI antes de renderizar a página privada.
 Falha técnica apresenta indisponibilidade; `401` conduz ao login. O proxy não constitui
 autoridade de autenticação: o backend sempre valida token, conta ativa, revogação e validade.
@@ -62,12 +64,12 @@ compartilham o contador PostgreSQL. Reset administrativo revoga todas as sessõe
 ## 4. Módulos e responsabilidades
 
 - `auth`: login de conta única, hash Argon2id e sessão segura.
-- `units`: cadastro/inativação de unidades e parâmetros opcionais de cobertura.
+- `units`: cadastro, busca, paginação e inativação/reativação, preservando vínculos. Cobertura ainda não implementada.
 - `employees`: cadastro/inativação, unidade de origem e horários semanais habituais.
 - `absences`: férias, folgas, faltas e consulta por período.
 - `schedules`: cálculo da escala-base, criação de snapshot diário, edição por data, verificação de conflitos, aprovação/publicação.
 - `coverage`: comparação entre alocações, ausências e necessidade configurada; sem inventar valores não cadastrados.
-- `dashboard`: distribuição por unidade, próximas férias/folgas, alertas e indicadores.
+- `dashboard`: nesta sprint, contagens reais de cadastros ativos e colaboradoras sem unidade. Alertas de férias/cobertura são futuros.
 - `communications`: composição de rascunhos, abertura no cliente de e-mail, exportação de escalas.
 - `ai`: tradução de pedidos para ações propostas estruturadas e auxílio de escrita; **não** faz gravações diretamente.
 
@@ -129,7 +131,19 @@ compartilham o contador PostgreSQL. Reset administrativo revoga todas as sessõe
 - **ADR-005:** conta única sem RBAC no MVP, mas autenticação robusta.
 - **ADR-006:** IA desacoplada, opcional, com validação e confirmação humana.
 - **ADR-007:** Outlook por abertura de composição e seleção manual de destinatários, sem Microsoft Graph no MVP.
-- **ADR-008:** escala-base semanal + snapshot diário para exceções e publicação consistente.
+- **ADR-008:** escala-base semanal + snapshot diário para exceções e publicação consistente (futuro).
+- **ADR-009:** horários normalizados por pessoa/dia, sete estados explícitos, gravação semanal atômica e cálculo aritmético de minutos previstos.
+- **ADR-010:** inativação preserva vínculos; novos vínculos exigem unidade ativa, com verificação transacional.
+
+### Contratos operacionais da Sprint 03
+
+Todas as consultas de negócio exigem sessão FastAPI. POST/PATCH/PUT exigem origem
+exata, cabeçalho CSRF, JSON e limite de 4 KiB também no proxy Next.js. O proxy permite
+apenas caminhos, métodos, UUIDs e parâmetros conhecidos; não recebe destinos livres.
+Listagens têm busca literal, status, paginação limitada a 100 e ordenação nome/UUID.
+As páginas privadas reutilizam guard, monitor de sessão e logout. A interface utiliza
+componentes compartilhados e os tokens visuais observados, sem importar código Lovable.
+Não há nova infraestrutura, serviço externo obrigatório ou arquitetura genérica de CRUD.
 
 ## 11. Não objetivos no MVP
 

@@ -1,5 +1,5 @@
 # RecepHub — Regras de Negócio
-**Versão:** 1.0 | **Status:** regras propostas, sujeitas a validação
+**Versão:** 1.1 | **Status:** regras operacionais da Sprint 03 aprovadas; regras de escalas e cobertura ainda propostas
 
 ## 1. Conceitos
 - **Unidade de origem:** referência cadastral de colaboradora.
@@ -17,9 +17,9 @@
 | RN-04 | Postos mudam livremente por data; título do posto pertence à alocação. | Confirmada conceitualmente |
 | RN-05 | Um mesmo guichê não deve ter duas colaboradoras simultâneas na mesma unidade, se o posto representa posição exclusiva. | A validar |
 | RN-06 | Necessidade mínima de pessoal varia por unidade, data e faixa horária. | A validar |
-| RN-07 | Horários e pausas são registrados explicitamente; não calcular carga semanal antes de validar regras contratuais. | Proposta |
+| RN-07 | Horários e pausas são explícitos. A Sprint 03 calcula minutos previstos por aritmética; isso não valida contratos, legislação ou horas trabalhadas. | Aprovada na Sprint 03 |
 | RN-08 | Escalas são rascunho até a ação de publicar. | Proposta |
-| RN-09 | Inativar colaboradora não exclui histórico. | Proposta |
+| RN-09 | Inativar colaboradora ou unidade preserva os registros. Vínculos existentes com unidade inativa permanecem sinalizados; novos vínculos exigem unidade ativa. | Aprovada na Sprint 03 |
 | RN-10 | IA apenas propõe texto/edições, sujeitos a validação e confirmação. | Confirmada arquiteturalmente |
 | RN-11 | Dados públicos de demonstração são fictícios; dados reais não vão ao Git. | Confirmada |
 | RN-12 | Fuso de exibição: America/Sao_Paulo; auditoria em UTC. | Proposta |
@@ -44,3 +44,14 @@ Para cada alocação: (a) verificar existência e status da colaboradora; (b) ch
 - Como a escala é aprovada, alterada e comunicada hoje.
 
 > Nota: exemplos de jornadas, quantidade mínima de pessoas, unidades e postos não são regras definitivas do produto até confirmação com a usuária.
+
+## 6. Regras aprovadas para cadastros e horários — Sprint 03
+
+- Unidade habitual é opcional; nomes iguais são permitidos, diferenciados por UUID.
+- Cada colaboradora possui sete dias explícitos, de segunda a domingo. Novos cadastros começam com `pending`; dia pendente não representa folga.
+- `working` admite um período e um intervalo opcional no mesmo dia. Horários incompletos podem ser salvos; contradições conhecidas são rejeitadas. Não há jornada presumida no sábado ou domingo.
+- `non_working` representa dia explicitamente sem trabalho, sem horários. `pending` também não carrega horários.
+- O subtotal soma apenas dias completos; o total semanal só existe quando os sete dias estiverem definidos. Intervalo incompleto impede o cálculo daquele dia.
+- A substituição semanal exige sete dias únicos e ocorre em uma única transação.
+- Inativar uma unidade não desvincula colaboradoras. É permitido manter o vínculo já existente ou removê-lo; uma nova atribuição requer unidade ativa.
+- Indicadores desta sprint contam unidades ativas, colaboradoras ativas e colaboradoras ativas sem unidade habitual. Não representam pessoas trabalhando hoje ou cobertura por horário.
