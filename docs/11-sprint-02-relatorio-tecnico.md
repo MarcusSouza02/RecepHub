@@ -1,8 +1,9 @@
 # Sprint 02 — autenticação e acesso ao sistema
 
 Data: 12/11/2026. Entrega: conta única, sessões, login/logout e dashboard privado inicial.
-Estado: validação local aprovada; correção final de Compose autorizada para publicação.
-A homologação remota depende da execução da CI com essa correção.
+Estado: validação local e CI final aprovadas. A correção do Compose foi publicada em
+`df1dece`; a [execução 43332310079](https://github.com/MarcusSouza02/RecepHub/actions/runs/43332310079)
+foi concluída com sucesso, encerrando a pendência remota desta sprint.
 
 ## 1. Escopo e coordenação
 
@@ -133,7 +134,7 @@ relatórios da Sprint 01 e da Etapa 1 preservam seus resultados históricos.
 | Compose local | Configuração aprovada; projeto isolado `recephub-sprint02-smoke` subiu com os três serviços saudáveis nas portas 3280/3281, após restaurar as referências de desenvolvimento. |
 | Benchmark Argon2id no container | 404,9 / 416,8 / 340,3 ms; média aproximada 387 ms. Não é garantia de desempenho em produção. |
 | GitHub da Etapa 1 | Execuções de `e43fa0c` consultadas em 12/11: concluídas com sucesso. |
-| GitHub desta entrega | [Execução de 4c3ccba](https://github.com/MarcusSouza02/RecepHub/actions/runs/43330282322): backend, frontend, secrets e browser aprovados; Compose falhou. Ajuste final de tipos ainda local, sem resultado remoto observado para essa correção. |
+| GitHub desta entrega | Histórico: a [execução de 4c3ccba](https://github.com/MarcusSouza02/RecepHub/actions/runs/43330282322) aprovou backend, frontend, secrets e browser, mas falhou no Compose. Resultado final: `df1dece`, [execução 43332310079 aprovada](https://github.com/MarcusSouza02/RecepHub/actions/runs/43332310079), incluindo a correção do Compose. |
 
 Os cenários de navegador cobrem login/logout, cookie inacessível ao JavaScript, sessão
 forjada, duas sessões independentes, Voltar após logout, HTML sem cache, rate limit,
@@ -164,8 +165,8 @@ Durante a integração, os testes detectaram e motivaram correções:
   As referências de desenvolvimento foram restauradas no Git para o bind mount Linux
   do Compose, onde o usuário node não necessariamente é dono do arquivo do checkout.
   A preparação do commit foi inicialmente recusada pela ferramenta e posteriormente
-  autorizada pelo usuário. O smoke test local passou; a CI Linux dessa correção deve
-  ser confirmada para concluir a homologação.
+  autorizada pelo usuário. O smoke test local passou; posteriormente a CI de `df1dece`
+  também passou, concluindo a homologação técnica da Sprint 02.
 
 ## 6. Executar localmente
 
