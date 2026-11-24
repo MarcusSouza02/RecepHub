@@ -4,7 +4,7 @@ const origin = "http://127.0.0.1:3180";
 const headers = { Origin: origin, "X-RecepHub-CSRF": "1" };
 const credentials = { username: "e2e.demo", password: "Browser-fictional-password-123!" };
 test.beforeEach(() => {
-  execFileSync("docker", ["exec", "recephub-sprint02-api-test", "python", "-m", "tests.e2e_admin", "reset"], { stdio: "pipe" });
+  execFileSync("docker", ["exec", process.env.E2E_BACKEND_CONTAINER ?? "recephub-sprint02-api-test", "python", "-m", "tests.e2e_admin", "reset"], { stdio: "pipe" });
 });
 async function login(page: Page) {
   await page.goto("/login");
@@ -95,7 +95,7 @@ test("responsive layout keyboard and manifest", async ({ page }) => {
 
 test("monitor detects real expiration when the page regains focus", async ({ page }) => {
   await login(page);
-  execFileSync("docker", ["exec", "recephub-sprint02-api-test", "python", "-m", "tests.e2e_admin", "expire"], { stdio: "pipe" });
+  execFileSync("docker", ["exec", process.env.E2E_BACKEND_CONTAINER ?? "recephub-sprint02-api-test", "python", "-m", "tests.e2e_admin", "expire"], { stdio: "pipe" });
   await page.evaluate(() => window.dispatchEvent(new Event("focus")));
   await expect(page).toHaveURL("/login");
 });
@@ -123,7 +123,7 @@ test("device clock skew does not expire a valid session", async ({ page }) => {
 test("session timer expires without background polling", async ({ page }) => {
   await page.clock.install();
   await login(page);
-  execFileSync("docker", ["exec", "recephub-sprint02-api-test", "python", "-m", "tests.e2e_admin", "expire"], { stdio: "pipe" });
+  execFileSync("docker", ["exec", process.env.E2E_BACKEND_CONTAINER ?? "recephub-sprint02-api-test", "python", "-m", "tests.e2e_admin", "expire"], { stdio: "pipe" });
   let sessionRequests = 0;
   page.on("request", request => { if (request.url().endsWith("/api/v1/auth/session")) sessionRequests++; });
   await page.clock.runFor(61000);

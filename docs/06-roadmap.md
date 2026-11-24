@@ -1,7 +1,7 @@
 # RecepHub — Roadmap e Plano de Execução
 
-**Versão:** 1.1  
-**Data:** 29/10/2026  
+**Versão:** 1.2
+**Data:** 13/11/2026
 **Status:** Planejamento incremental atualizado para incluir RF-14, RF-15 e RF-17 no MVP.
 
 ## 1. Estratégia de entrega
@@ -29,7 +29,7 @@ Alembic, qualidade e estrutura inicial do PWA. Autenticação permanece como eta
 marco; a Sprint 01 não entrega ainda o login protegido. Manifest e ícones serão iniciados agora,
 com homologação final no Marco 6. Detalhes em [Sprint 01](07-sprint-01.md).
 
-**Sprint 02 — implementada, em validação final:** autenticação de conta única, sessões, login e dashboard
+**Sprint 02 — implementada e validada:** autenticação de conta única, sessões, login e dashboard
 privado inicial. Acompanhar as entregas no [quadro de cards da Sprint 02](09-sprint-02.md).
 Em 12/11/2026, o usuário autorizou execução coordenada, revisão final e commits/push em dev.
 
@@ -38,11 +38,17 @@ Em 12/11/2026, o usuário autorizou execução coordenada, revisão final e comm
 - [x] Backend FastAPI + SQLAlchemy + Alembic, PostgreSQL e Docker Compose.
 - [x] Estruturar módulos e testes básicos.
 - [x] Login único, hash Argon2id, sessão segura e dependência de autenticação para endpoints privados.
-- [x] GitHub Actions configurado com lint, testes e build (execução remota pendente).
+- [x] GitHub Actions: CI final da Sprint 02 aprovada em `df1dece`, [execução 43332310079](https://github.com/MarcusSouza02/RecepHub/actions/runs/43332310079).
 
 **Entregável:** aplicação local com login protegido.
 
 ## 4. Marco 2 — Dados e escala habitual
+
+**Sprint 03 em integração:** unidades, colaboradoras, vínculos opcionais, horários
+semanais normalizados e indicadores cadastrais. [Plano e cards](12-sprint-03.md),
+[referências visuais](13-sprint-03-referencia-visual.md) e
+[relatório de execução](14-sprint-03-relatorio-tecnico.md). As caixas abaixo só serão
+concluídas após testes/revisão; ausências e escala por data estão fora desta sprint.
 
 - [ ] CRUD de unidades e colaboradoras, incluindo inativação.
 - [ ] Vincular unidade de origem e jornada habitual por dia da semana.
