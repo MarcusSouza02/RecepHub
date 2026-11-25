@@ -1,9 +1,10 @@
 # Sprint 03 — relatório técnico de execução
 
-**Atualizado em:** 13/11/2026. **Estado:** implementação, testes locais e revisão concluídos; publicação e CI final em andamento.
+**Atualizado em:** 24/11/2026. **Estado:** implementação, revisão, publicação e CI concluídas.
 
 Este documento descreve arquivos, decisões e resultados efetivamente reportados pelo
-coordenador. A validação local está concluída; a CI desta entrega ainda deve ser observada.
+coordenador. Os PRs 3–9 foram integrados em `dev e4b1fd4`, cuja árvore equivale a
+`40a563e`. A validação local e a CI da entrega foram aprovadas.
 A Sprint 02 possui CI aprovada em `df1dece`,
 [execução 43332310079](https://github.com/MarcusSouza02/RecepHub/actions/runs/43332310079);
 essa evidência histórica não valida o novo código da Sprint 03.
@@ -149,10 +150,10 @@ Este roteiro é de reprodução; não afirma que cada cenário já foi aprovado.
 | Frontend | ESLint, TypeScript e build aprovados. |
 | Navegador | Primeira execução: 26 aprovados e dois com falha de seletor de alerta. Após corrigir a ambiguidade com o anunciador de rotas Next.js, os dois casos passaram em nova execução desktop/mobile (390×844). São 28 cenários cobertos; não houve uma única execução de 28 aprovados nesta evidência. |
 | Revisão independente | `gpt-6-astra`, esforço xhigh: sem bloqueadores após correções do tratamento de UUID e navegação mobile; testes faltantes apontados na revisão foram acrescentados. |
-| Validação visual local | Oito capturas desktop 1440×1000/mobile 390×844: dashboard, unidades, colaboradoras e editor semanal, sem overflow ou erros de página. Link de pular conteúdo visível por Tab. Capturas temporárias, não versionadas. |
+| Validação visual local | Dez capturas desktop 1440×1000/mobile 390×844: dashboard, unidades, colaboradoras e editor semanal, sem overflow ou erros de página. Link de pular conteúdo visível por Tab. Capturas temporárias, não versionadas. |
 | Indicadores reais | DOM/API conferidos: vazio → unidade ativa 1 → colaboradora ativa 1 → unidade inativa 0 preservando vínculo → desvinculação explícita e sem unidade 1. |
-| Commits | Etapa 0 `9a68bd9`; etapa 1 `274d9a9`; etapa 2 `31c4021`; etapa 3 `782f69a`; etapa 4 `3a36b2b`; etapa 5 `3d9da95`. Etapa 6 e publicação em andamento. |
-| CI Sprint 03 | Pendente de observação; não confundir com CI histórica da Sprint 02. |
+| Commits | Etapa 0 `9a68bd9`; etapa 1 `274d9a9`; etapa 2 `31c4021`; etapa 3 `782f69a`; etapa 4 `3a36b2b`; etapa 5 `3d9da95`; etapa 6 `40a563e`. PRs 3–9 integrados em `dev e4b1fd4`. |
+| CI Sprint 03 | Aprovada em `dev e4b1fd4`: [execução 45486371431](https://github.com/MarcusSouza02/RecepHub/actions/runs/45486371431). |
 
 Não foram adicionadas dependências de aplicação para os módulos operacionais. Manrope e
 Sora foram incluídas como arquivos locais com licença OFL e avisos de terceiros. O problema
@@ -169,5 +170,6 @@ Escalas por data, snapshots, ausências, cobertura mínima, exportações, comun
 IA continuam fora desta entrega. A próxima etapa deve partir de cadastros persistidos
 e dias explicitamente configurados; nenhum dia pendente pode virar folga implicitamente.
 Regras contratuais, turnos noturnos, publicação e ausências ainda exigem decisões próprias.
-O encerramento remoto depende da publicação e da CI desta sprint. A integração e revisão
-locais descritas acima estão aprovadas; requisitos futuros não são antecipados por essa aprovação.
+A entrega remota foi aprovada na CI indicada acima. A Sprint 04 inicia escalas e revisões
+conforme o planejamento aprovado em 24/11/2026; requisitos futuros não são antecipados
+pela aprovação da Sprint 03.

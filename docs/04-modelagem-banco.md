@@ -1,18 +1,18 @@
 # RecepHub — Modelagem Inicial do Banco de Dados
 
-**Versão:** 1.5
-**Data:** 13/11/2026
-**Status:** autenticação implementada; unidades, colaboradoras e horários normalizados em integração na Sprint 03. Ausências e escalas permanecem propostas.
+**Versão:** 1.6
+**Data:** 24/11/2026
+**Status:** autenticação implementada; cadastros e horários concluídos; escalas semanais em implementação na Sprint 04. Ausências permanecem propostas.
 
 ## 1. Objetivo e princípios
 
 Modelo PostgreSQL enxuto para **uma usuária**. Permite gerar escalas a partir das unidades e jornadas habituais, registrar exceções por data, gerenciar férias/folgas e publicar uma escala completa de modo consistente. Não usa tabela de guichês fixos, não armazena dados de pacientes e não exige persistência de e-mails ou mensagens de IA.
 
-## 2. Tabelas implementadas e propostas (8)
+## 2. Tabelas implementadas e propostas
 
 A Sprint 02 criou `users` e `user_sessions`. A Sprint 03 acrescenta `units`,
-`employees` e `employee_work_patterns`, sem contas ou dados reais. `absences`,
-`schedule_days` e `schedule_assignments` continuam propostas, sem migrações.
+`employees` e `employee_work_patterns`, sem contas ou dados reais.
+O antigo modelo diário foi substituído pelo semanal da Sprint 04. Ausências ainda não possuem migração.
 
 ### 2.1 `users`
 - `id` UUID PK
@@ -88,30 +88,23 @@ No modelo atual, dia ausente nunca é interpretado como folga: a semana exige se
 
 As datas são inclusivas. Treinamento com presença em uma unidade é tratado inicialmente como posto/atividade da escala, não necessariamente ausência.
 
-### 2.5 `schedule_days`
-- `id` UUID PK
-- `work_date` DATE UNIQUE NOT NULL
-- `status` VARCHAR(20) NOT NULL DEFAULT 'DRAFT' — `DRAFT` ou `PUBLISHED`
-- `published_at` TIMESTAMPTZ NULL
-- `created_at` TIMESTAMPTZ NOT NULL
-- `updated_at` TIMESTAMPTZ NOT NULL
+### 2.5 Escalas semanais — Sprint 04
 
-É o **cabeçalho de uma escala completa do dia**, de todas as unidades. Controla publicação atômica, inclusive quando alguma unidade não tiver alocações. Na geração inicial, o backend materializa uma fotografia da escala-base daquele dia para edição; dias ainda não materializados são calculados da configuração habitual e das ausências. Publicação não equivale a envio a terceiros.
+- `schedules`: UUID, week_start DATE segunda-feira única, status draft/published, version,
+  latest_revision_number, created_at e updated_at UTC.
+- `schedule_employee_days`: UUID, schedule_id, employee_id, work_date, estado explícito
+  pending/working/non_working/excluded, employee_name_snapshot, source_data JSONB,
+  resolution_note opcional e timestamps. Único por escala/pessoa/data; excluído exige motivo.
+- `schedule_assignments`: UUID, day_id, unit_id, unit_name_snapshot, entrada/saída,
+  intervalo opcional completo, position textual até 80 caracteres e timestamps.
+- `schedule_revisions`: UUID, schedule_id, number único por escala, source_version,
+  schema_version, published_at e snapshot JSONB autocontido.
 
-### 2.6 `schedule_assignments`
-- `id` UUID PK
-- `schedule_day_id` UUID NOT NULL FK → `schedule_days.id` ON DELETE CASCADE
-- `employee_id` UUID NOT NULL FK → `employees.id`
-- `unit_id` UUID NOT NULL FK → `units.id`
-- `start_time` TIME NOT NULL
-- `end_time` TIME NOT NULL
-- `break_start_time` TIME NULL
-- `break_end_time` TIME NULL
-- `position` VARCHAR(80) NULL — posto textual dinâmico, como `Guichê 2`, `Triagem`, `Unimed`, `Treinamento`
-- `created_at` TIMESTAMPTZ NOT NULL
-- `updated_at` TIMESTAMPTZ NOT NULL
-
-São as **linhas concretas** da escala do dia materializado. Não são geradas antecipadamente para todos os dias futuros. Uma remoção excepcional é representada pela ausência daquela linha no snapshot explícito do dia — nunca pela exclusão da jornada habitual no cadastro.
+Cada participante recebe sete dias explícitos. Alocação deriva pessoa/data do dia;
+períodos múltiplos não sobrepostos são permitidos, sem alterar o habitual. Datas dentro
+da semana são validadas pelo serviço transacional, pois dependem da tabela pai.
+Revisões preservam nomes e períodos; trigger rejeita UPDATE/DELETE comum. Publicar
+novamente cria nova revisão. Não há DELETE público de histórico.
 
 ### 2.7 `user_sessions`
 
@@ -129,14 +122,14 @@ a apresentação do fuso depende da conexão, sem armazenar o nome de um fuso.
 
 ## 3. Semântica da escala-base e das exceções
 
-1. **Dia sem `schedule_days`:** gerar visualização virtual da escala-base a partir de `employees.home_unit_id`, `employee_work_patterns` e `absences`.
-2. **Primeira alteração:** criar `schedule_days` e suas `schedule_assignments` com uma fotografia da base; aplicar a mudança à fotografia.
-3. **Dia já materializado:** usar somente suas linhas concretas, inclusive se alguma colaboradora tiver sido removida. Não reconstruir automaticamente linhas excluídas.
-4. **Nova ausência sobre escala existente:** detectar conflito e exigir resolução antes da publicação. Não remover silenciosamente alocações que a usuária já ajustou.
-5. **Publicação:** validar o conjunto inteiro, atualizar `schedule_days.status` em transação e expor a versão publicada nas exportações. Edição posterior pode retornar o dia a `DRAFT`, segundo política a validar; o histórico completo de versões fica pós-MVP.
-6. **Atualização de jornada habitual:** vale para os dias ainda não materializados. Dias materializados não são reescritos sem escolha explícita.
-
-O modelo original de seis tabelas, agora acrescido de `user_sessions` e `employee_work_patterns`, evita a ambiguidade entre “nenhuma exceção” e “retirada deliberada da escala”. A definição operacional de publicação e edição de uma escala já publicada deverá ser validada com a usuária.
+POST explícito gera fotografia semanal; GET não materializa dados. Fontes incompletas,
+unidade ausente/inativa e dias pendentes permanecem pendências. Remover período não
+restaura automaticamente o habitual. Exclusão exige decisão e motivo operacional.
+Mutações bloqueiam a escala e conferem expected_version. Publicação valida o conjunto,
+cria snapshot e incrementa a revisão atomicamente. Edição posterior não modifica
+publicações anteriores. Ausências futuras exigirão diagnóstico e revisão explícita.
+Contratos: [Sprint 04](15-sprint-04.md). A proposta de adiar todo histórico ao pós-MVP
+foi substituída na aprovação do planejamento integrado.
 
 ## 4. Relacionamentos
 
@@ -144,15 +137,16 @@ O modelo original de seis tabelas, agora acrescido de `user_sessions` e `employe
 - `users` 1:N `user_sessions`, com exclusão em cascata
 - `employees` 1:N `employee_work_patterns` (sete dias explícitos)
 - `employees` 1:N `absences` (proposta)
-- `schedule_days` 1:N `schedule_assignments`
-- `employees` 1:N `schedule_assignments`
+- `schedules` 1:N `schedule_employee_days` e `schedule_revisions`
+- `schedule_employee_days` 1:N `schedule_assignments`
+- `employees` 1:N `schedule_employee_days`
 - `units` 1:N `schedule_assignments`
 
 ## 5. Integridade e desempenho
 
-- Índices: `schedule_days(work_date)` único, `schedule_assignments(schedule_day_id, unit_id)`, `schedule_assignments(schedule_day_id, employee_id)`, `absences(employee_id, start_date, end_date)`.
+- Índices: `schedules(week_start)` único, `schedule_employee_days(schedule_id, employee_id, work_date)` único, `schedule_assignments(day_id)`, `absences(employee_id, start_date, end_date)`.
 - Validar `start_time < end_time` para turnos no mesmo dia; intervalo completo e contido no turno.
-- Validar ausência, jornada e sobreposição **no backend em transação**. Usar bloqueio do registro de `schedule_days` ou mecanismo equivalente ao publicar/editar para reduzir corridas de atualização; cobrir com testes.
+- Validar ausência, jornada e sobreposição **no backend em transação**. Usar bloqueio do registro de `schedules` ou mecanismo equivalente ao publicar/editar para reduzir corridas de atualização; cobrir com testes.
 - Não impor exclusividade de posto textual até validar se múltiplas pessoas podem ocupar o mesmo setor/guichê em horários distintos.
 - Horas previstas = duração do turno menos intervalo; não são ponto eletrônico nem folha de pagamento.
 - Alertas do dashboard são calculados por consulta a `absences` e às escalas; não precisam de tabela própria no MVP.
@@ -174,7 +168,7 @@ O modelo original de seis tabelas, agora acrescido de `user_sessions` e `employe
 ## 8. Evoluções pós-MVP
 
 - `staffing_requirements` para cobertura por dia/faixa horária.
-- `schedule_versions` e auditoria detalhada para histórico imutável e recuperação de versões.
+- Comparação detalhada e recuperação assistida; snapshots imutáveis já pertencem à Sprint 04.
 - `employee_contracts` para múltiplos vínculos e regras com vigência.
 - `push_subscriptions` e agendador para push notifications.
 - Eventual tabela de modelos/rascunhos de comunicação, **somente se houver necessidade real de persistência**.

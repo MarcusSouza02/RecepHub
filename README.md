@@ -50,7 +50,7 @@ A Etapa 1 foi implementada e publicada: modelos de conta/sessões, primeira migr
 e testes PostgreSQL. Consulte o [relatório da Etapa 1](docs/10-sprint-02-etapa-01.md)
 para arquivos, garantias, execução segura dos testes e resultados.
 
-## Sprint 03 — validada localmente, CI pendente
+## Sprint 03 — concluída
 
 Cadastros de unidades e colaboradoras, vínculos habituais opcionais e horários semanais
 foram implementados sobre a autenticação existente. Consulte o [plano e cards](docs/12-sprint-03.md),
@@ -59,7 +59,9 @@ a [referência visual](docs/13-sprint-03-referencia-visual.md) e o
 roteiro manual e evidências de validação. Backend: 153 testes aprovados em PostgreSQL
 descartável, com um warning conhecido. Lint, TypeScript e build aprovados. No navegador,
 26 cenários passaram na primeira execução e dois após correção dos seletores; revisão
-independente concluída. Publicação e CI da Sprint 03 ainda estão em andamento. Não há escalas por data, ausências ou IA nesta sprint.
+independente concluída. Os PRs 3–9 foram integrados em `dev e4b1fd4`, com
+[CI aprovada](https://github.com/MarcusSouza02/RecepHub/actions/runs/45486371431).
+Não há escalas por data, ausências ou IA nesta sprint.
 
 Após atualizar as imagens e aplicar `alembic upgrade head`, acesse `/units` e `/employees`
 com sessão válida. O editor semanal fica nos detalhes da colaboradora. Inativação preserva
@@ -223,3 +225,11 @@ de escolha da pessoa autora. Fontes oficiais consultadas: [Next.js](https://next
 [Tailwind](https://tailwindcss.com/docs/installation/using-postcss) e
 [shadcn/ui](https://ui.shadcn.com/docs/components/card). O componente adaptado mantém a atribuição
 em [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+
+
+## Sprint 04 — escalas semanais
+
+Implementação em andamento na branch `feature/sprint-04-schedules`.
+O [quadro da sprint](docs/15-sprint-04.md) registra decisões e contratos aprovados.
+A escala semanal materializa os dados habituais sem alterá-los; edições exigem versão
+esperada e publicações criam revisões imutáveis. Resultados serão registrados no relatório.

@@ -1,8 +1,8 @@
 # RecepHub — Arquitetura Técnica
 
-**Versão:** 1.3
-**Data:** 13/11/2026
-**Status:** autenticação implementada; cadastros e horários em integração na Sprint 03. Escalas, ausências, cobertura e IA permanecem propostas.
+**Versão:** 1.4
+**Data:** 24/11/2026
+**Status:** autenticação, cadastros e horários concluídos; escalas semanais em implementação na Sprint 04. Ausências, cobertura e IA são incrementos posteriores.
 
 ## 1. Objetivo arquitetural
 
@@ -97,12 +97,13 @@ compartilham o contador PostgreSQL. Reset administrativo revoga todas as sessõe
 
 ## 7. Publicação, leitura e exportação
 
-- Sem escala materializada para uma data: renderizar distribuição habitual calculada.
-- Ao editar: materializar `schedule_days` + `schedule_assignments` e alterar somente a fotografia da data.
-- Antes de publicar: validar o conjunto e atualizar status em uma transação.
-- Tela principal: colaboradores agrupados por unidade; tabela tradicional e calendário semanal como visões do mesmo conjunto.
-- Renderizar PNG/PDF deterministicamente a partir da escala aprovada, sem IA de imagem. A interface deve deixar claro quando se está visualizando um rascunho.
-- Abrir e-mail: `mailto:` ou composição compatível do cliente, com alternativa de copiar texto. Não há garantia de abertura específica do Outlook caso ele não seja o padrão.
+A Sprint 04 substitui a proposta diária por identidade semanal, sete estados por pessoa
+e alocações efetivas. Geração/edição não alteram o habitual. expected_version e bloqueio
+transacional impedem sobrescritas silenciosas. Publicação confirmada cria revisão JSONB
+autocontida e imutável; edição posterior preserva todas as revisões anteriores.
+Ausências/cobertura (05) reutilizarão os comandos; exportação e IA (06) consumirão versões
+identificadas. PDF/PNG determinísticos, sem IA de imagem; engine será avaliada na 06.
+Outlook permanece por composição no cliente, sem envio automático ou Microsoft Graph.
 
 ## 8. Segurança e confiabilidade mínimas
 
@@ -131,7 +132,7 @@ compartilham o contador PostgreSQL. Reset administrativo revoga todas as sessõe
 - **ADR-005:** conta única sem RBAC no MVP, mas autenticação robusta.
 - **ADR-006:** IA desacoplada, opcional, com validação e confirmação humana.
 - **ADR-007:** Outlook por abertura de composição e seleção manual de destinatários, sem Microsoft Graph no MVP.
-- **ADR-008:** escala-base semanal + snapshot diário para exceções e publicação consistente (futuro).
+- **ADR-008 (24/11/2026):** escala semanal materializada, estados diários, edição versionada e revisões publicadas imutáveis na Sprint 04.
 - **ADR-009:** horários normalizados por pessoa/dia, sete estados explícitos, gravação semanal atômica e cálculo aritmético de minutos previstos.
 - **ADR-010:** inativação preserva vínculos; novos vínculos exigem unidade ativa, com verificação transacional.
 

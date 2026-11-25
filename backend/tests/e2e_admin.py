@@ -4,7 +4,7 @@ import os
 import sys
 from datetime import timedelta
 
-from sqlalchemy import create_engine, delete, select, update
+from sqlalchemy import create_engine, delete, select, text, update
 from sqlalchemy.orm import Session
 
 from app.core.security import utcnow
@@ -27,7 +27,13 @@ def main():
                 db.commit()
             elif sys.argv[1] == "reset":
                 # Operational fixtures belong only to the explicitly named new browser database.
-                if url.database == "recephub_sprint03_browser_test":
+                if url.database == "recephub_sprint04_browser_test":
+                    db.execute(
+                        text(
+                            "TRUNCATE schedule_revisions, schedule_assignments, "
+                            "schedule_employee_days, schedules"
+                        )
+                    )
                     db.execute(delete(EmployeeWorkPattern))
                     db.execute(delete(Employee))
                     db.execute(delete(Unit))
