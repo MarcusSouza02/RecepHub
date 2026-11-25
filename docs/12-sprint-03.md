@@ -52,28 +52,28 @@ um aceite técnico depende de testes e revisão, não apenas da presença de arq
 | S03-01 | 0 | Encerramento documental da Sprint 02 | docs(sprint-02): record successful final CI validation | Registrado em 9a68bd9 |
 | S03-02 | 0 | Referências visuais observadas e divergências | docs(sprint-03): document visual references and adaptation strategy | Registrado em 9a68bd9 |
 | S03-03 | 0 | Plano, decisões e contratos | docs(sprint-03): define operational modules implementation plan | Registrado em 9a68bd9 |
-| S03-04 | 1 | Unit e migração 0002 | feat(units): add unit persistence and migration | Implementado/testado localmente; CI pendente |
-| S03-05 | 1 | API e consultas de unidades | feat(units): add authenticated management endpoints | Implementado/testado localmente; CI pendente |
-| S03-06 | 1 | Persistência, API e segurança | test(units): cover management and access protection | Implementado/testado localmente; CI pendente |
-| S03-07 | 2 | Tokens, shell e componentes compartilhados | feat(ui): align shared interface with approved visual reference | Implementado/testado localmente; CI pendente |
-| S03-08 | 2 | Proxy restrito de unidades | feat(proxy): allow authenticated unit operations | Implementado/testado localmente; CI pendente |
-| S03-09 | 2 | Interface de unidades | feat(units): add responsive management interface | Implementado/testado localmente; CI pendente |
-| S03-10 | 2 | Fluxos de unidades no navegador | test(units): cover management browser flows | Implementado/testado localmente; CI pendente |
-| S03-11 | 3 | Employee e migração 0003 | feat(employees): add persistence and optional home unit | Implementado/testado localmente; CI pendente |
-| S03-12 | 3 | API, filtros e vínculos | feat(employees): add authenticated management endpoints | Implementado/testado localmente; CI pendente |
-| S03-13 | 3 | Integridade e ciclo de vida | test(employees): cover relationships and lifecycle rules | Implementado/testado localmente; CI pendente |
-| S03-14 | 4 | Proxy restrito de colaboradoras | feat(proxy): allow authenticated employee operations | Implementado/testado localmente; CI pendente |
-| S03-15 | 4 | Interface de colaboradoras | feat(employees): add responsive management interface | Implementado/testado localmente; CI pendente |
-| S03-16 | 4 | Equipe habitual por unidade | feat(units): display habitual employee assignments | Implementado/testado localmente; CI pendente |
-| S03-17 | 4 | Fluxos de colaboradoras e vínculos | test(employees): cover management and unit assignments | Implementado/testado localmente; CI pendente |
-| S03-18 | 5 | Padrões semanais e migração 0004 | feat(work-patterns): add normalized weekly persistence | Implementado/testado localmente; CI pendente |
-| S03-19 | 5 | API e cálculo de minutos | feat(work-patterns): add weekly configuration and duration calculation | Implementado/testado localmente; CI pendente |
-| S03-20 | 5 | Editor semanal com repetição explícita | feat(work-patterns): add responsive weekly editor | Implementado/testado localmente; CI pendente |
-| S03-21 | 5 | Cálculos, incompletude e edição | test(work-patterns): cover weekly configuration and validation | Implementado/testado localmente; CI pendente |
-| S03-22 | 6 | Resumo real protegido | feat(dashboard): add operational summary endpoint | Implementado/testado localmente; CI pendente |
-| S03-23 | 6 | Indicadores e atalhos reais | feat(dashboard): display real operational indicators | Implementado/testado localmente; CI pendente |
-| S03-24 | 6 | Regressão e homologação visual | test(sprint-03): cover operational end-to-end flows | Implementado/testado localmente; CI pendente |
-| S03-25 | 6 | Relatório e encerramento | docs(sprint-03): document implementation and validation results | Relatório atualizado; CI e encerramento pendentes |
+| S03-04 | 1 | Unit e migração 0002 | feat(units): add unit persistence and migration | Concluído; CI de dev aprovada |
+| S03-05 | 1 | API e consultas de unidades | feat(units): add authenticated management endpoints | Concluído; CI de dev aprovada |
+| S03-06 | 1 | Persistência, API e segurança | test(units): cover management and access protection | Concluído; CI de dev aprovada |
+| S03-07 | 2 | Tokens, shell e componentes compartilhados | feat(ui): align shared interface with approved visual reference | Concluído; CI de dev aprovada |
+| S03-08 | 2 | Proxy restrito de unidades | feat(proxy): allow authenticated unit operations | Concluído; CI de dev aprovada |
+| S03-09 | 2 | Interface de unidades | feat(units): add responsive management interface | Concluído; CI de dev aprovada |
+| S03-10 | 2 | Fluxos de unidades no navegador | test(units): cover management browser flows | Concluído; CI de dev aprovada |
+| S03-11 | 3 | Employee e migração 0003 | feat(employees): add persistence and optional home unit | Concluído; CI de dev aprovada |
+| S03-12 | 3 | API, filtros e vínculos | feat(employees): add authenticated management endpoints | Concluído; CI de dev aprovada |
+| S03-13 | 3 | Integridade e ciclo de vida | test(employees): cover relationships and lifecycle rules | Concluído; CI de dev aprovada |
+| S03-14 | 4 | Proxy restrito de colaboradoras | feat(proxy): allow authenticated employee operations | Concluído; CI de dev aprovada |
+| S03-15 | 4 | Interface de colaboradoras | feat(employees): add responsive management interface | Concluído; CI de dev aprovada |
+| S03-16 | 4 | Equipe habitual por unidade | feat(units): display habitual employee assignments | Concluído; CI de dev aprovada |
+| S03-17 | 4 | Fluxos de colaboradoras e vínculos | test(employees): cover management and unit assignments | Concluído; CI de dev aprovada |
+| S03-18 | 5 | Padrões semanais e migração 0004 | feat(work-patterns): add normalized weekly persistence | Concluído; CI de dev aprovada |
+| S03-19 | 5 | API e cálculo de minutos | feat(work-patterns): add weekly configuration and duration calculation | Concluído; CI de dev aprovada |
+| S03-20 | 5 | Editor semanal com repetição explícita | feat(work-patterns): add responsive weekly editor | Concluído; CI de dev aprovada |
+| S03-21 | 5 | Cálculos, incompletude e edição | test(work-patterns): cover weekly configuration and validation | Concluído; CI de dev aprovada |
+| S03-22 | 6 | Resumo real protegido | feat(dashboard): add operational summary endpoint | Concluído; CI de dev aprovada |
+| S03-23 | 6 | Indicadores e atalhos reais | feat(dashboard): display real operational indicators | Concluído; CI de dev aprovada |
+| S03-24 | 6 | Regressão e homologação visual | test(sprint-03): cover operational end-to-end flows | Concluído; CI de dev aprovada |
+| S03-25 | 6 | Relatório e encerramento | docs(sprint-03): document implementation and validation results | Concluído; relatório e CI aprovados |
 
 Branches, na ordem de integração: `feature/sprint-03-planning`,
 `feature/sprint-03-units-backend`, `feature/sprint-03-units-ui`,
@@ -148,3 +148,11 @@ Commits locais: etapa 0 `9a68bd9`, etapa 1 `274d9a9`, etapa 2 `31c4021`, etapa 3
 em 63 arquivos. Oito capturas locais desktop/mobile conferidas sem overflow ou erros
 de página; indicadores reais verificados no DOM/API. Etapa 6, publicação e CI final em andamento;
 não se declara a CI remota aprovada antes de observar seu resultado.
+
+
+### Encerramento remoto confirmado em 24/11/2026
+
+PRs 3–9 integrados em `dev e4b1fd4`, árvore equivalente a `40a563e`.
+[CI aprovada](https://github.com/MarcusSouza02/RecepHub/actions/runs/45486371431).
+Esse registro substitui os estados históricos de publicação pendente acima. A Sprint 04
+segue em [15-sprint-04.md](15-sprint-04.md).

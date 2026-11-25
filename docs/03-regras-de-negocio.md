@@ -1,5 +1,5 @@
 # RecepHub — Regras de Negócio
-**Versão:** 1.1 | **Status:** regras operacionais da Sprint 03 aprovadas; regras de escalas e cobertura ainda propostas
+**Versão:** 1.1 | **Status:** cadastros e regras de escalas aprovados até a Sprint 04; ausências e cobertura detalhadas na Sprint 05
 
 ## 1. Conceitos
 - **Unidade de origem:** referência cadastral de colaboradora.
@@ -55,3 +55,17 @@ Para cada alocação: (a) verificar existência e status da colaboradora; (b) ch
 - A substituição semanal exige sete dias únicos e ocorre em uma única transação.
 - Inativar uma unidade não desvincula colaboradoras. É permitido manter o vínculo já existente ou removê-lo; uma nova atribuição requer unidade ativa.
 - Indicadores desta sprint contam unidades ativas, colaboradoras ativas e colaboradoras ativas sem unidade habitual. Não representam pessoas trabalhando hoje ou cobertura por horário.
+
+
+## 7. Regras aprovadas para escalas — Sprint 04
+
+Uma escala semanal de segunda a domingo possui estados explícitos por pessoa/data e
+alocações efetivas. Múltiplos períodos não sobrepostos são permitidos; intervalo não
+libera automaticamente realocação. Posto é texto da alocação, sem exclusividade presumida.
+Pendências e trabalho sem período completo impedem publicação; resolver estado exige
+escolha explícita, com motivo para retirada. Inativos não são apagados da fotografia,
+mas alocações inativas exigem resolução antes de publicar. Edição não altera habitual.
+Publicação confirmada cria revisão imutável. Versão obsoleta retorna 409. Datas operacionais
+são locais; auditoria UTC e apresentação America/Sao_Paulo. Ausências e mínimos de equipe
+não são inferidos nesta sprint. As propostas antigas RN-02/RN-08/RN-12 são consolidadas
+por estas decisões; regras de ausência serão detalhadas na Sprint 05.

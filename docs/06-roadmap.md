@@ -138,3 +138,12 @@ Cada entrega deve ter critério de aceite, testes das regras críticas, interfac
 3. Definir publicação, alteração de escala publicada e necessidade de histórico.
 4. Validar protótipo da visão por unidade e formato PNG/PDF.
 5. Testar o fluxo ideal de composição de e-mail no Outlook utilizado por ela.
+
+
+## Execução aprovada em 24/11/2026
+
+A Sprint 03 foi integrada em dev e4b1fd4 com CI aprovada. A Sprint 04 implementa
+escala semanal, estados diários, edição versionada e revisões imutáveis, substituindo
+a proposta de adiar todo histórico. O quadro está em 15-sprint-04.md; evidências em
+16-sprint-04-relatorio-tecnico.md. Ausências/cobertura seguem na Sprint 05; exportação,
+comunicados e IA opcional na Sprint 06. Release/hospedagem permanece etapa separada.
