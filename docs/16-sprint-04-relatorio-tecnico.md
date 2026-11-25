@@ -1,7 +1,7 @@
 # Sprint 04 — relatório técnico
 
-Atualização: 24/11/2026. Estado: implementação, revisão e testes automatizados locais
-concluídos; publicação e CI em andamento. Este registro distingue resultados observados de pendências.
+Atualização: 25/11/2026. Estado: implementação, revisão e testes automatizados locais
+concluídos; publicada e integrada em `dev` após CI aprovada. Este registro distingue resultados observados de pendências.
 
 ## Base, escopo e coordenação
 
@@ -86,7 +86,7 @@ Leituras históricas não incorporam renomeações, inativações ou futuras aus
 | Frontend | ESLint, TypeScript e build aprovados; build final ajusta acentos, filtros e rótulo do conteúdo publicado. |
 | Navegador | 38 testes aprovados em uma execução completa de 5,3 minutos, nos projetos desktop e mobile; dez cenários novos de escalas e 28 de regressão. |
 | Conferência visual | Seis capturas de lista, rascunho e revisão em desktop 1440×1000/mobile 390×844; sem overflow ou erros de página. Foco inicial no link de pular conteúdo e revisão somente leitura confirmados. Capturas temporárias, fora do Git. |
-| CI remota | Pendente de publicação e observação desta entrega. |
+| CI remota | Cinco checks aprovados no commit `db84f6f`: [execução 45591558153](https://github.com/MarcusSouza02/RecepHub/actions/runs/45591558153). PR #12 integrado em `dev 9e29d4b` em 25/11/2026. |
 
 Ambiente isolado: rede `recephub-sprint04-tests`, PostgreSQL temporário
 `recephub-sprint04-test-db`, banco backend `recephub_sprint04_test` e banco navegador

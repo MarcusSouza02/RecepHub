@@ -1,11 +1,11 @@
 # Sprint 05 — ausências e cobertura
 
 Atualizado em 25/11/2026. Estado: implementação, revisão, testes e conferência visual local aprovados;
-publicação e CI remota pendentes.
+publicação e CI de implementação aprovadas; entrega organizada no [PR #13 para dev](https://github.com/MarcusSouza02/RecepHub/pull/13).
 
-Branch `feature/sprint-05-absences-coverage`, baseada provisoriamente no commit local
-`db84f6f` da Sprint 04. A publicação da base aguarda autenticação GitHub; essa condição
-não equivale a integração em `dev` nem a CI aprovada.
+Branch `feature/sprint-05-absences-coverage`, baseada no commit
+`db84f6f` da Sprint 04. A base foi integrada pelo PR #12 em `dev 9e29d4b`. A implementação da Sprint 05 foi publicada
+em `581cd91`, com cinco checks aprovados na execução 45591467156.
 
 ## Etapas e cards
 
@@ -17,7 +17,7 @@ não equivale a integração em `dev` nem a CI aprovada.
 | S05-04 | Conflitos de ausência na escala corrente | Validado, incluindo publicação concorrente |
 | S05-05 | Consulta de candidatas e confirmação de cobertura | Validado e revisado |
 | S05-06 | Dashboard e homologação integrada | 256 testes backend e 50 E2E aprovados |
-| S05-07 | Relatório, revisão final, commit e CI | Fechamento local; CI remota pendente |
+| S05-07 | Relatório, revisão final, commit e CI | Commit, revisão e CI de implementação aprovados; PR #13 para dev |
 
 ## Regras e contratos
 

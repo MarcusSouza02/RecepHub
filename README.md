@@ -232,12 +232,11 @@ em [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 Implementação validada localmente no commit `db84f6f`, branch `feature/sprint-04-schedules`.
 O [quadro da sprint](docs/15-sprint-04.md) registra decisões e contratos aprovados.
 A escala semanal materializa os dados habituais sem alterá-los; edições exigem versão
-esperada e publicações criam revisões imutáveis. O [relatório](docs/16-sprint-04-relatorio-tecnico.md) registra 193 testes backend e 38 E2E aprovados. Publicação/CI aguardam autenticação GitHub.
+esperada e publicações criam revisões imutáveis. O [relatório](docs/16-sprint-04-relatorio-tecnico.md) registra 193 testes backend e 38 E2E aprovados. Publicada e integrada em `dev` pelo PR #12, com [CI aprovada](https://github.com/MarcusSouza02/RecepHub/actions/runs/45591558153).
 
 ## Sprint 05 — ausências e cobertura
 
-Branch `feature/sprint-05-absences-coverage`, baseada provisoriamente no commit local da
-Sprint 04. [Plano](docs/17-sprint-05.md) e [relatório](docs/18-sprint-05-relatorio-tecnico.md)
+Branch `feature/sprint-05-absences-coverage`, baseada na Sprint 04 integrada em `dev`. [Plano](docs/17-sprint-05.md) e [relatório](docs/18-sprint-05-relatorio-tecnico.md)
 distinguem implementação, testes e pendências remotas.
 
 Após reconstruir as imagens, confira o destino e aplique:
@@ -256,4 +255,4 @@ O dashboard consulta ausências e alocações afetadas em um período de até 31
 
 Testes locais usam exclusivamente bancos descartáveis `recephub_sprint05_test` e
 `recephub_sprint05_browser_test`, com `TEST_DATABASE_ALLOW_RESET=1`. Não execute ciclos
- de downgrade ou fixtures de reset no desenvolvimento.
+de downgrade ou fixtures de reset no desenvolvimento.

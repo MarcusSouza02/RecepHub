@@ -1,14 +1,14 @@
 # Sprint 05 — relatório técnico de execução
 
 Atualizado em 25/11/2026. Implementação, revisão, testes locais e conferência visual concluídos.
-Publicação e CI remota pendentes de autenticação GitHub.
+Publicação e CI de implementação aprovadas; fechamento documentado no [PR #13 para dev](https://github.com/MarcusSouza02/RecepHub/pull/13).
 
 ## Base e coordenação
 
 A Sprint 04 foi salva em `db84f6f`, sem coautor, após 193 testes backend, 38 testes E2E,
 Ruff, ESLint, TypeScript, build e conferência visual. O push encontrou ausência de
-credencial GitHub utilizável. A branch da Sprint 05 parte desse commit local, aguardando
-integração remota da base. Não há alegação de CI remota aprovada para nenhuma das duas.
+credencial GitHub utilizável inicialmente. Após autenticação em 25/11, ambas as branches
+foram publicadas. A Sprint 04 passou na CI e foi integrada em `dev 9e29d4b` pelo PR #12.
 
 Um subagente implementou ausências; outro, conflitos/cobertura; ambos implementaram suas
 interfaces e cenários de navegador. O coordenador integrou migração, rotas, proxy,
@@ -58,7 +58,10 @@ xhigh identificou melhorias de classificação e limite de duração, corrigidas
   histórico America/Sao_Paulo, snapshot preservado e revisão somente leitura conferidos.
   Capturas temporárias, fora do Git. O roteiro foi corrigido para abrir explicitamente
   a revisão antes de verificar seu modo somente leitura.
-- Fechamento documental local concluído. Publicação, PR e CI remota ainda pendentes.
+- Commit de implementação `581cd91`, sem coautor, publicado. Os cinco checks remotos
+  passaram: [execução 45591467156](https://github.com/MarcusSouza02/RecepHub/actions/runs/45591467156).
+  Fechamento documental no PR #13; o resultado remoto do commit documental também deve
+  passar nos checks antes do merge.
 
 Os dois primeiros testes de erro de formulário falharam por ambiguidade de `role=alert`
 com o anunciador de rotas Next.js; os seletores foram limitados à mensagem esperada.
@@ -86,5 +89,5 @@ cancele. Gere escala, publique e registre ausência posterior: a revisão anteri
 permanecer igual e nova publicação exigir resolução do conflito. Consulte cobertura,
 verifique motivos, confirme candidata e confira que somente o rascunho mudou.
 
-Esse roteiro complementa os testes locais; CI remota permanece pendente. Credenciais e `.env.example`
+Esse roteiro complementa os testes locais e a CI de implementação aprovada. Credenciais e `.env.example`
 preexistente permanecem fora dos commits. Sprint 06 ainda não iniciada.
