@@ -229,7 +229,31 @@ em [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 ## Sprint 04 — escalas semanais
 
-Implementação em andamento na branch `feature/sprint-04-schedules`.
+Implementação validada localmente no commit `db84f6f`, branch `feature/sprint-04-schedules`.
 O [quadro da sprint](docs/15-sprint-04.md) registra decisões e contratos aprovados.
 A escala semanal materializa os dados habituais sem alterá-los; edições exigem versão
-esperada e publicações criam revisões imutáveis. Resultados serão registrados no relatório.
+esperada e publicações criam revisões imutáveis. O [relatório](docs/16-sprint-04-relatorio-tecnico.md) registra 193 testes backend e 38 E2E aprovados. Publicação/CI aguardam autenticação GitHub.
+
+## Sprint 05 — ausências e cobertura
+
+Branch `feature/sprint-05-absences-coverage`, baseada provisoriamente no commit local da
+Sprint 04. [Plano](docs/17-sprint-05.md) e [relatório](docs/18-sprint-05-relatorio-tecnico.md)
+distinguem implementação, testes e pendências remotas.
+
+Após reconstruir as imagens, confira o destino e aplique:
+
+```sh
+docker compose exec backend alembic upgrade head
+docker compose exec backend alembic current
+docker compose exec backend alembic check
+```
+
+A revisão `0006_absences` cria ausências e eventos; não altera contas ou credenciais.
+Em `/absences`, cadastre períodos integrais/parciais, edite e cancele com confirmação.
+Em `/schedules/{id}`, consulte candidatas à cobertura e confirme uma disponível: somente
+o rascunho muda. Ausências podem impedir nova publicação, preservando as anteriores.
+O dashboard consulta ausências e alocações afetadas em um período de até 31 dias.
+
+Testes locais usam exclusivamente bancos descartáveis `recephub_sprint05_test` e
+`recephub_sprint05_browser_test`, com `TEST_DATABASE_ALLOW_RESET=1`. Não execute ciclos
+ de downgrade ou fixtures de reset no desenvolvimento.

@@ -1,4 +1,5 @@
 from app.database.base import Base
+from app.models.absence import Absence, AbsenceEvent
 from app.models.employee import Employee
 from app.models.employee_work_pattern import EmployeeWorkPattern
 from app.models.schedule import (
@@ -13,6 +14,8 @@ from app.models.user_session import UserSession
 
 __all__ = [
     "Base",
+    "Absence",
+    "AbsenceEvent",
     "User",
     "UserSession",
     "Unit",

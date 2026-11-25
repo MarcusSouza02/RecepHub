@@ -147,3 +147,10 @@ escala semanal, estados diários, edição versionada e revisões imutáveis, su
 a proposta de adiar todo histórico. O quadro está em 15-sprint-04.md; evidências em
 16-sprint-04-relatorio-tecnico.md. Ausências/cobertura seguem na Sprint 05; exportação,
 comunicados e IA opcional na Sprint 06. Release/hospedagem permanece etapa separada.
+
+## Execução local em 24/11/2026
+
+Sprint 04: commit local `db84f6f`, 193 testes backend e 38 E2E aprovados; push/CI pendentes
+por autenticação GitHub indisponível. Sprint 05: ausências, conflitos, cobertura confirmada
+e alertas em homologação na branch própria; [evidências](18-sprint-05-relatorio-tecnico.md).
+Sprint 06 ainda não iniciada; exportação, comunicação e IA permanecem fora do entregue.
