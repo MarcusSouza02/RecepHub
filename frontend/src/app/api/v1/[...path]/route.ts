@@ -10,13 +10,14 @@ const routes = new Map([
 ]);
 type Context = { params: Promise<{ path: string[] }> };
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-type OperationRoute = { methods: string[]; upstream: string; query: "units" | "employees" | "team" | "schedules" | null };
+type OperationRoute = { methods: string[]; upstream: string; query: "units" | "employees" | "team" | "schedules" | "absences" | null };
 function scheduleRoute(path: string[]): OperationRoute | null {
   if (path[0] !== "schedules") return null;
   const upstream = `/api/v1/${path.join("/")}`;
   if (path.length === 1) return { methods: ["GET", "POST"], upstream, query: "schedules" };
   if (!uuid.test(path[1] ?? "")) return null;
   if (path.length === 2) return { methods: ["GET"], upstream, query: null };
+  if (path.length === 4 && path[2] === "coverage" && ["preview", "confirm"].includes(path[3])) return { methods: ["POST"], upstream, query: null };
   if (path.length === 3 && ["assignments", "validate", "publish"].includes(path[2])) return { methods: ["POST"], upstream, query: null };
   if (path.length === 3 && path[2] === "revisions") return { methods: ["GET"], upstream, query: null };
   if (path.length === 4 && ["assignments", "days"].includes(path[2]) && uuid.test(path[3])) return { methods: ["PATCH"], upstream, query: null };
@@ -27,6 +28,16 @@ function scheduleRoute(path: string[]): OperationRoute | null {
 function operationRoute(path: string[]): OperationRoute | null {
   if (path[0] === "schedules") return scheduleRoute(path);
   const [resource, id, child] = path;
+  if (resource === "absences") {
+    const upstream = `/api/v1/${path.join("/")}`;
+    if (path.length === 1) return { methods: ["GET", "POST"], upstream, query: "absences" };
+    if (!uuid.test(id ?? "")) return null;
+    if (path.length === 2) return { methods: ["GET", "PATCH"], upstream, query: null };
+    if (path.length === 3 && child === "cancel") return { methods: ["POST"], upstream, query: null };
+    if (path.length === 3 && child === "events") return { methods: ["GET"], upstream, query: null };
+    return null;
+  }
+  if (path.length === 2 && resource === "dashboard" && id === "operational-alerts") return { methods: ["GET"], upstream: "/api/v1/dashboard/operational-alerts", query: "schedules" };
   if (path.length === 2 && resource === "dashboard" && id === "summary") return { methods: ["GET"], upstream: "/api/v1/dashboard/summary", query: null };
   if (resource !== "units" && resource !== "employees") return null;
   if (path.length === 1) return { methods: ["GET", "POST"], upstream: `/api/v1/${resource}`, query: resource };
@@ -41,7 +52,13 @@ function validQuery(params: URLSearchParams, kind: OperationRoute["query"]) {
   for (const [key, value] of params) {
     if (seen.has(key) || !kind) return false;
     seen.add(key);
-    if (kind === "schedules" && ["from_date", "to_date"].includes(key)) {
+    if (kind === "absences") {
+      if (key === "employee_id") { if (!uuid.test(value)) return false; continue; }
+      if (key === "type") { if (!["vacation", "day_off", "compensation", "other"].includes(value)) return false; continue; }
+      if (key === "status") { if (!["active", "cancelled", "all"].includes(value)) return false; continue; }
+      if (!["page", "page_size", "from_date", "to_date"].includes(key)) return false;
+    }
+    if ((kind === "schedules" || kind === "absences") && ["from_date", "to_date"].includes(key)) {
       if (!/^\d{4}-\d{2}-\d{2}$/.test(value) || !Number.isFinite(Date.parse(value)) || new Date(value).toISOString().slice(0, 10) !== value) return false;
       continue;
     }
@@ -53,7 +70,7 @@ function validQuery(params: URLSearchParams, kind: OperationRoute["query"]) {
     else if (kind === "employees" && key === "without_home_unit") { if (!["true", "false"].includes(value)) return false; }
     else return false;
   }
-  return !(seen.has("home_unit_id") && seen.has("without_home_unit")) && !(kind === "schedules" && params.has("from_date") && params.has("to_date") && params.get("from_date")! > params.get("to_date")!);
+  return !(seen.has("home_unit_id") && seen.has("without_home_unit")) && !((kind === "schedules" || kind === "absences") && params.has("from_date") && params.has("to_date") && params.get("from_date")! > params.get("to_date")!);
 }
 function error(detail: string, status: number, allow?: string) {
   return NextResponse.json({ detail }, { status, headers: { "Cache-Control": "private, no-store", ...(allow ? { Allow: allow } : {}) } });

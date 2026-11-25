@@ -140,7 +140,10 @@ class ScheduleService:
                         day,
                         assignment,
                     )
-        return {"errors": errors, "warnings": []}
+        from app.services.absence_conflicts import absence_diagnostics
+
+        absences = absence_diagnostics(self.db, days, grouped)
+        return {"errors": errors + absences["errors"], "warnings": absences["warnings"]}
 
     def detail(self, schedule_id):
         schedule = self.get(schedule_id)

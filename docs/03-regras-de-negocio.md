@@ -69,3 +69,14 @@ Publicação confirmada cria revisão imutável. Versão obsoleta retorna 409. D
 são locais; auditoria UTC e apresentação America/Sao_Paulo. Ausências e mínimos de equipe
 não são inferidos nesta sprint. As propostas antigas RN-02/RN-08/RN-12 são consolidadas
 por estas decisões; regras de ausência serão detalhadas na Sprint 05.
+
+## Consolidação da Sprint 05
+
+Ausências operacionais integrais incluem as datas inicial e final; parciais exigem mesma
+data e horário ordenado. Tipos: férias, folga, compensação e outro; sem dados clínicos.
+Sobreposições são sinalizadas e não duplicam o impacto. Cancelamento preserva eventos.
+Ausência interceptando trabalho efetivo bloqueia nova publicação; intervalo completo não
+é trabalho. Publicações anteriores não são reescritas. Cobertura considera referência
+congelada, pausas, alocações, ausências e duração total conhecida; não presume livre um
+cadastro incompleto. Prévia não grava; confirmação revalida e altera somente o rascunho.
+Contratos e limites completos: [Sprint 05](17-sprint-05.md).

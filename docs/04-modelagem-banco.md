@@ -179,3 +179,12 @@ foi substituída na aprovação do planejamento integrado.
 - Regras e mínimos de cobertura; se há exceções justificáveis para impedimentos.
 - Comportamento após editar uma escala já publicada e necessidade de identificar a última versão enviada.
 - Autorização para uso de dados reais em infraestrutura pessoal.
+
+## Persistência da Sprint 05 — revisão 0006
+
+`absences`: UUID, employee_id RESTRICT, type, mode, datas inclusivas, horários opcionais,
+notes até 500, status active/cancelled, version positiva, created_at/updated_at/cancelled_at UTC.
+Checks de período, minuto, versão e status; índice em colaboradora. `absence_events`: UUID,
+absence_id RESTRICT, version, action created/updated/cancelled, snapshot JSONB e created_at;
+unicidade ausência/versão. Eventos são anexados na mesma transação e não têm rota de alteração.
+A migração depende de 0005 e não modifica cadastros ou revisões de escala existentes.

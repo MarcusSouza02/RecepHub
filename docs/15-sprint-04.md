@@ -1,6 +1,6 @@
 # Sprint 04 — escalas semanais, publicação e histórico
 
-Data de início: 24/11/2026. Estado: implementação autorizada, validação em andamento.
+Data de início: 24/11/2026. Estado: concluída e integrada em `dev` em 25/11/2026 pelo PR #12, após CI aprovada.
 
 ## Base e autorização
 

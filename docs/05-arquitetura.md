@@ -149,3 +149,12 @@ Não há nova infraestrutura, serviço externo obrigatório ou arquitetura gené
 ## 11. Não objetivos no MVP
 
 Sem Graph OAuth, envio automático, leitura de caixa postal, integração oficial WhatsApp Business, notificações push, múltiplos usuários, controle de ponto, financeiro, dados clínicos, filas distribuídas ou otimização OR-Tools avançada.
+
+## Incremento da Sprint 05
+
+Ausências mantêm eventos por versão. Escrita bloqueia Employee antes de Absence; publicação
+bloqueia Schedule, Employees e Units ordenados antes de validar ausências. Cobertura confirma
+sob Schedule → Employee → Unit, revalidando disponibilidade; nenhuma escrita de ausência
+adquire Schedule depois de Employee. Prévia não persiste proposta. Consultas do dashboard
+usam período limitado a 31 dias e listas de 20, com total e sinalização de truncamento.
+Não foi adicionada dependência de aplicação. [Plano e contratos](17-sprint-05.md).

@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { CoveragePanel } from "@/features/coverage/coverage-panel";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState, type FormEvent } from "react";
 import { Alert, Button, ConfirmDialog, Field, Input, Pagination, controlClass, secondaryClass } from "@/components/ui/operations";
@@ -74,6 +75,7 @@ export function ScheduleDetail({ id }: { id: string }) {
     {error && <Alert>{error}</Alert>}
     <div className="flex flex-wrap gap-3">{revision ? <Button onClick={() => setRevision(null)}>Editar conteúdo corrente</Button> : <><button className={secondaryClass} disabled={busy || !!editor || !!resolve} onClick={() => void validate()}>Validar rascunho</button><Button disabled={busy || !!editor || !!resolve} onClick={() => setPublish(true)}>Publicar revisão</Button></>}</div>
     {!revision && diagnostics && <DiagnosticList value={diagnostics} />}
+    {!revision && !editor && !resolve && !busy && <CoveragePanel scheduleId={id} version={data.version} days={data.days} onUpdated={result => { setData(result); setDiagnostics(result.diagnostics); }} />}
     <section className={panel}><h2 className="mb-3 font-semibold">Histórico de publicações</h2>{revisions.length ? <div className="flex flex-wrap gap-2">{revisions.map(item => <button className={secondaryClass} key={item.number} disabled={busy || !!editor || !!resolve} onClick={() => void viewRevision(item.number)}>Revisão {item.number}</button>)}</div> : <p className="text-sm text-muted-foreground">Nenhuma publicação. Salvar o rascunho não publica a escala.</p>}</section>
     <div className="grid gap-4 sm:grid-cols-2"><Field id="filter-date" label="Data"><select id="filter-date" className={controlClass} value={filterDate} onChange={e => setFilterDate(e.target.value)}><option value="">Todas as datas</option>{[...new Set(shown.days.map(d => d.work_date))].sort().map(date => <option key={date} value={date}>{dateLabel(date)}</option>)}</select></Field><Field id="filter-unit" label="Unidade"><select id="filter-unit" className={controlClass} value={filterUnit} onChange={e => setFilterUnit(e.target.value)}><option value="">Todas as unidades</option>{[...unitOptions].map(([key, name]) => <option key={key} value={key}>{name}</option>)}</select></Field></div>
     {!revision && editor && <AssignmentForm key={`${editor.day.id}-${editor.assignment?.id ?? "new"}`} editor={editor} units={units} busy={busy} onDirty={() => setDirty(true)} onCancel={close} onSave={body => void mutate(editor.assignment ? `/assignments/${editor.assignment.id}` : "/assignments", editor.assignment ? "PATCH" : "POST", { ...body, ...(editor.assignment ? {} : { day_id: editor.day.id }) })} />}
