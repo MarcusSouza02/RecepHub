@@ -10,12 +10,12 @@ Commits sem coautor; nenhum deploy, merge em main ou alteração de credenciais.
 | Card | Etapa | Entrega | Estado |
 |---|---|---|---|
 | S06-01 | 0 | Contratos e referência de documento | Definidos |
-| S06-02 | 1 | Exportação protegida de revisão e rascunho | Validado localmente; CI pendente |
-| S06-03 | 1 | PDF selecionável e PNG por página | Validado localmente; CI pendente |
-| S06-04 | 2 | Comunicados editáveis, cópia e mailto | Validado localmente; CI pendente |
-| S06-05 | 3 | Provedor substituível e estado desligado | Validado localmente; CI pendente |
-| S06-06 | 4 | Prévia estruturada e confirmação transacional | Validado localmente; CI pendente |
-| S06-07 | 5 | Regressão, artefatos, documentação e CI | Em andamento |
+| S06-02 | 1 | Exportação protegida de revisão e rascunho | Concluído; CI aprovada em addafb7 |
+| S06-03 | 1 | PDF selecionável e PNG por página | Concluído; CI aprovada em addafb7 |
+| S06-04 | 2 | Comunicados editáveis, cópia e mailto | Concluído; CI aprovada em addafb7 |
+| S06-05 | 3 | Provedor substituível e estado desligado | Concluído; CI aprovada em addafb7 |
+| S06-06 | 4 | Prévia estruturada e confirmação transacional | Concluído; CI aprovada em addafb7 |
+| S06-07 | 5 | Regressão, artefatos, documentação e CI | Concluído; cinco checks aprovados |
 
 ## Exportação
 

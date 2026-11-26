@@ -172,8 +172,11 @@ assistência opcional desligada por padrão. Propostas exigem prévia, versão, 
 temporário e confirmação, sem publicação automática. Não há novas tabelas ou migrações.
 
 Playwright Python e Chromium são dependências explícitas do renderer; não há SDK de IA
-ou obrigação de configurar provedor externo. Homologação integrada e revisão estão em
-andamento; não se declara CI remota ou provedor real aprovados antecipadamente.
+ou obrigação de configurar provedor externo. Homologação integrada e revisão concluídas: 309 testes backend e 62 E2E locais,
+artefatos e interface inspecionados. Cinco checks remotos aprovados em `addafb7`,
+[execução 45726633566](https://github.com/MarcusSouza02/RecepHub/actions/runs/45726633566).
+Fechamento pelo [PR #14 para dev](https://github.com/MarcusSouza02/RecepHub/pull/14).
+Provedor externo real permanece desligado e não foi validado com dados reais.
 O [quadro da Sprint 06](19-sprint-06.md) e seu [relatório](20-sprint-06-relatorio-tecnico.md)
 concentram contratos, limitações e resultados efetivamente observados. A atualização
 substitui o estado “Sprint 06 não implementada” registrado historicamente acima.

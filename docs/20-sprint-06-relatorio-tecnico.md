@@ -1,7 +1,8 @@
 # Sprint 06 — relatório técnico
 
 Atualizado em 25/11/2026. Implementação, testes automatizados e revisão independente concluídos localmente.
-Conferência visual concluída; publicação e CI remota em finalização.
+Conferência visual e publicação concluídas; cinco checks remotos aprovados em `addafb7`.
+Fechamento documental e integração pelo PR #14.
 
 ## Base e coordenação
 
@@ -80,7 +81,15 @@ exibir sua referência selecionável, permitindo distinguir unidades homônimas 
   falso positivo sobre chave exclusivamente fictícia do teste de segurança.
   Backend fixado em Ubuntu 24.04; teste gera chave temporária em memória.
   `.gitleaksignore` identifica somente a ocorrência histórica exata (commit/arquivo/regra/linha),
-  sem desativar regra ou excluir arquivos futuros. Nova CI ainda deve ser observada.
+  sem desativar regra ou excluir arquivos futuros. Os sete testes de segurança passaram
+  novamente após a troca da chave.
+- **CI aprovada em `addafb7`**: backend, frontend, browser, Compose e secrets na
+  [execução 45726633566](https://github.com/MarcusSouza02/RecepHub/actions/runs/45726633566).
+  A execução de push 45726624205 também foi aprovada. Essas evidências pertencem ao
+  código da Sprint 06, não às execuções históricas das sprints anteriores.
+- Commits sem coautor: implementação `4e23b1f`, correções de CI `addafb7` e fechamento
+  documental neste incremento. [PR #14 para dev](https://github.com/MarcusSouza02/RecepHub/pull/14).
+  Nenhum deploy ou merge para `main`; arquivos de ambiente preservados.
 
 Ambiente isolado: bancos `recephub_sprint06_test` e `recephub_sprint06_browser_test` no
 PostgreSQL temporário existente; API exclusiva `recephub-sprint06-api-test` em loopback
