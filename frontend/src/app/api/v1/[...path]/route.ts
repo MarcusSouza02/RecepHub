@@ -16,6 +16,9 @@ function scheduleRoute(path: string[]): OperationRoute | null {
   const upstream = `/api/v1/${path.join("/")}`;
   if (path.length === 1) return { methods: ["GET", "POST"], upstream, query: "schedules" };
   if (!uuid.test(path[1] ?? "")) return null;
+  if (path.length === 3 && path[2] === "exports") return { methods: ["POST"], upstream, query: null };
+  if (path.length === 4 && path[2] === "exports" && path[3] === "preview") return { methods: ["POST"], upstream, query: null };
+  if (path.length === 4 && path[2] === "proposals" && ["preview", "confirm"].includes(path[3])) return { methods: ["POST"], upstream, query: null };
   if (path.length === 2) return { methods: ["GET"], upstream, query: null };
   if (path.length === 4 && path[2] === "coverage" && ["preview", "confirm"].includes(path[3])) return { methods: ["POST"], upstream, query: null };
   if (path.length === 3 && ["assignments", "validate", "publish"].includes(path[2])) return { methods: ["POST"], upstream, query: null };
@@ -26,6 +29,8 @@ function scheduleRoute(path: string[]): OperationRoute | null {
   return null;
 }
 function operationRoute(path: string[]): OperationRoute | null {
+  if (path.length === 2 && path[0] === "communications" && path[1] === "prepare") return { methods: ["POST"], upstream: "/api/v1/communications/prepare", query: null };
+  if (path.length === 2 && path[0] === "assistant" && ["status", "communications"].includes(path[1])) return { methods: [path[1] === "status" ? "GET" : "POST"], upstream: `/api/v1/assistant/${path[1]}`, query: null };
   if (path[0] === "schedules") return scheduleRoute(path);
   const [resource, id, child] = path;
   if (resource === "absences") {
@@ -115,7 +120,9 @@ async function proxy(request: NextRequest, context: Context) {
     const target = new URL(route.upstream, config.backend);
     if (!authRoute) target.search = request.nextUrl.search;
     if (!["http:", "https:"].includes(target.protocol) || target.username || target.password) return error("Serviço indisponível", 503);
-    const upstream = await fetch(target, { method: request.method, headers, body, cache: "no-store", redirect: "manual", signal: AbortSignal.timeout(5000) });
+    const binaryExport = path.length === 3 && path[0] === "schedules" && path[2] === "exports";
+    const assistantCall = path[0] === "assistant" || path[2] === "proposals";
+    const upstream = await fetch(target, { method: request.method, headers, body, cache: "no-store", redirect: "manual", signal: AbortSignal.timeout(binaryExport ? 40000 : assistantCall ? 25000 : 5000) });
     if (upstream.status >= 300 && upstream.status < 400) return error("Serviço indisponível", 502);
     const responseHeaders = new Headers({ "Cache-Control": "private, no-store" });
     responseHeaders.set("Content-Type", upstream.headers.get("content-type") ?? "application/json");
@@ -124,7 +131,22 @@ async function proxy(request: NextRequest, context: Context) {
     const retry = upstream.headers.get("retry-after");
     if (retry && /^\d+$/.test(retry)) responseHeaders.set("Retry-After", retry);
     for (const value of upstream.headers.getSetCookie()) if (value.startsWith(`${config.cookieName}=`)) responseHeaders.append("Set-Cookie", value);
-    return new Response(upstream.status === 204 ? null : await upstream.arrayBuffer(), { status: upstream.status, headers: responseHeaders });
+    if (binaryExport && upstream.ok) {
+      const mime = upstream.headers.get("content-type")?.split(";")[0];
+      if (!mime || !["application/pdf", "image/png"].includes(mime)) return error("Formato de exportação inválido", 502);
+      const disposition = upstream.headers.get("content-disposition");
+      if (disposition && /^attachment; filename="[a-zA-Z0-9._-]+"$/.test(disposition)) responseHeaders.set("Content-Disposition", disposition);
+      responseHeaders.set("X-Content-Type-Options", "nosniff");
+    }
+    const chunks: Uint8Array[] = []; let size = 0;
+    if (upstream.status !== 204 && upstream.body) {
+      const reader = upstream.body.getReader();
+      try { while (true) { const part = await reader.read(); if (part.done) break; size += part.value.byteLength; if (size > (binaryExport ? 20 * 1024 * 1024 : 4 * 1024 * 1024)) { await reader.cancel(); return error("Resposta excede o limite permitido", 502); } chunks.push(part.value); } }
+      finally { reader.releaseLock(); }
+    }
+    const result = new Uint8Array(size); let offset = 0;
+    for (const chunk of chunks) { result.set(chunk, offset); offset += chunk.byteLength; }
+    return new Response(upstream.status === 204 ? null : result.buffer, { status: upstream.status, headers: responseHeaders });
   } catch { return error("Serviço temporariamente indisponível", 503); }
 }
 export const GET = proxy;

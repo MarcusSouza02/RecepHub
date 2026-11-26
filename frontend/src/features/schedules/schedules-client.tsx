@@ -1,5 +1,7 @@
 "use client";
 import Link from "next/link";
+import { AssistantPanel } from "@/features/assistant/assistant-panel";
+import { ExportPanel } from "@/features/exports/export-panel";
 import { CoveragePanel } from "@/features/coverage/coverage-panel";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState, type FormEvent } from "react";
@@ -73,8 +75,11 @@ export function ScheduleDetail({ id }: { id: string }) {
   const unitOptions = new Map(shown.days.flatMap(day => day.assignments.map(a => [a.unit_id, a.unit_name] as const)));
   return <div className="space-y-6"><Link href="/schedules" className="text-sm text-primary">← Escalas</Link><div className="flex flex-wrap items-start justify-between gap-4"><div><h1 className="text-3xl font-semibold">Semana de {dateLabel(data.week_start)}</h1><p className="mt-2 text-muted-foreground">{revision ? `Publicação · revisão ${revision.number} · somente leitura` : `${data.status === "published" ? "Conteúdo publicado" : "Rascunho"} · versão ${data.version}`}</p></div><button disabled={busy} className={secondaryClass} onClick={() => { if (!dirty || window.confirm("Recarregar e descartar alterações não salvas?")) { setEditor(null); setResolve(null); setDirty(false); void load(); } }}>Recarregar escala</button></div>
     {error && <Alert>{error}</Alert>}
+    <Link className="inline-block text-sm underline" href={`/communications?schedule_id=${id}&kind=${revision ? "revision" : "draft"}&number=${revision ? revision.number : data.version}`}>Preparar comunicado desta versão</Link>
+    <ExportPanel key={revision ? `revision-${revision.number}` : `current-${data.version}`} schedule={data} revisions={revisions} revision={revision} />
     <div className="flex flex-wrap gap-3">{revision ? <Button onClick={() => setRevision(null)}>Editar conteúdo corrente</Button> : <><button className={secondaryClass} disabled={busy || !!editor || !!resolve} onClick={() => void validate()}>Validar rascunho</button><Button disabled={busy || !!editor || !!resolve} onClick={() => setPublish(true)}>Publicar revisão</Button></>}</div>
     {!revision && diagnostics && <DiagnosticList value={diagnostics} />}
+    {!revision && !editor && !resolve && !busy && <AssistantPanel schedule={data} onUpdated={result => { setData(result); setDiagnostics(result.diagnostics); }} />}
     {!revision && !editor && !resolve && !busy && <CoveragePanel scheduleId={id} version={data.version} days={data.days} onUpdated={result => { setData(result); setDiagnostics(result.diagnostics); }} />}
     <section className={panel}><h2 className="mb-3 font-semibold">Histórico de publicações</h2>{revisions.length ? <div className="flex flex-wrap gap-2">{revisions.map(item => <button className={secondaryClass} key={item.number} disabled={busy || !!editor || !!resolve} onClick={() => void viewRevision(item.number)}>Revisão {item.number}</button>)}</div> : <p className="text-sm text-muted-foreground">Nenhuma publicação. Salvar o rascunho não publica a escala.</p>}</section>
     <div className="grid gap-4 sm:grid-cols-2"><Field id="filter-date" label="Data"><select id="filter-date" className={controlClass} value={filterDate} onChange={e => setFilterDate(e.target.value)}><option value="">Todas as datas</option>{[...new Set(shown.days.map(d => d.work_date))].sort().map(date => <option key={date} value={date}>{dateLabel(date)}</option>)}</select></Field><Field id="filter-unit" label="Unidade"><select id="filter-unit" className={controlClass} value={filterUnit} onChange={e => setFilterUnit(e.target.value)}><option value="">Todas as unidades</option>{[...unitOptions].map(([key, name]) => <option key={key} value={key}>{name}</option>)}</select></Field></div>

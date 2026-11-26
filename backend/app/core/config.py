@@ -1,6 +1,6 @@
 from functools import lru_cache
 
-from pydantic import Field, field_validator, model_validator
+from pydantic import Field, SecretStr, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy import URL
 
@@ -16,6 +16,12 @@ class Settings(BaseSettings):
     auth_origin: str = "http://localhost:3000"
     auth_secure_cookie: bool = False
     environment: str = "development"
+    ai_enabled: bool = False
+    ai_provider: str = "disabled"
+    ai_api_key: SecretStr = Field(default=SecretStr(""), repr=False)
+    ai_model: str = "gemini-2.5-flash"
+    ai_allow_external_data: bool = False
+    proposal_signing_key: SecretStr = Field(default=SecretStr(""), repr=False)
     cors_origins: list[str] = ["http://localhost:3000", "http://127.0.0.1:3000"]
 
     @field_validator("cors_origins")

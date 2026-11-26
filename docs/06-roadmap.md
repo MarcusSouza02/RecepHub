@@ -162,3 +162,22 @@ checks aprovados. Sprint 05 publicada em `581cd91`, 256 testes backend e 50 E2E 
 cinco checks remotos aprovados na execução 45591467156; fechamento no PR #13 para `dev`.
 Essa atualização substitui a pendência de autenticação registrada acima. Sprint 06 ainda
 não implementada. Não houve integração em `main` ou deploy.
+
+### Execução da Sprint 06 — 25/11/2026
+
+Iniciada a branch `feature/sprint-06-exports-communications-ai` sobre `dev badb47d`, após
+integração e CI das Sprints 04–05. Implementados exportação protegida de revisão/rascunho
+em PDF selecionável e PNG, comunicados editáveis/copiáveis, composição por `mailto:` e
+assistência opcional desligada por padrão. Propostas exigem prévia, versão, recibo
+temporário e confirmação, sem publicação automática. Não há novas tabelas ou migrações.
+
+Playwright Python e Chromium são dependências explícitas do renderer; não há SDK de IA
+ou obrigação de configurar provedor externo. Homologação integrada e revisão estão em
+andamento; não se declara CI remota ou provedor real aprovados antecipadamente.
+O [quadro da Sprint 06](19-sprint-06.md) e seu [relatório](20-sprint-06-relatorio-tecnico.md)
+concentram contratos, limitações e resultados efetivamente observados. A atualização
+substitui o estado “Sprint 06 não implementada” registrado historicamente acima.
+
+Próximos passos depois do encerramento: avaliar ambiente privado de publicação,
+backup/restore e regras reais com a responsável. Hosting, quotas, termos de IA e custos
+devem ser rechecados nessa ocasião; nenhum deploy ou merge em `main` foi realizado.

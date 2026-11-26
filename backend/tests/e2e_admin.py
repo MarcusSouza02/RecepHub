@@ -27,7 +27,7 @@ def main():
                 db.commit()
             elif sys.argv[1] == "reset":
                 # Operational fixtures belong only to the explicitly named new browser database.
-                if url.database == "recephub_sprint05_browser_test":
+                if url.database == "recephub_sprint06_browser_test":
                     db.execute(
                         text(
                             "TRUNCATE schedule_revisions, schedule_assignments, "

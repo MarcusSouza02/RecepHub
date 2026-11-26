@@ -30,6 +30,12 @@ services:
       AUTH_ORIGIN: ${AUTH_ORIGIN:-http://localhost:3000}
       AUTH_SECURE_COOKIE: ${AUTH_SECURE_COOKIE:-false}
       ENVIRONMENT: ${ENVIRONMENT:-development}
+      AI_ENABLED: ${AI_ENABLED:-false}
+      AI_PROVIDER: ${AI_PROVIDER:-disabled}
+      AI_API_KEY: ${AI_API_KEY:-}
+      AI_MODEL: ${AI_MODEL:-gemini-2.5-flash}
+      AI_ALLOW_EXTERNAL_DATA: ${AI_ALLOW_EXTERNAL_DATA:-false}
+      PROPOSAL_SIGNING_KEY: ${PROPOSAL_SIGNING_KEY:-}
     ports:
       - "127.0.0.1:8000:8000"
     volumes:

@@ -200,7 +200,9 @@ interno da API e `AUTH_ORIGIN` para a origem exata do frontend. Variáveis `NEXT
 
 Pydantic Settings valida configuração; psycopg é o driver PostgreSQL; httpx suporta TestClient.
 Ruff e pytest verificam o backend. Tailwind/PostCSS cuidam dos estilos; `clsx` e `tailwind-merge`
-compõem classes do componente shadcn/ui. Não há dependência de IA, autenticação ou serviço pago.
+compõem classes do componente shadcn/ui. Argon2id e sessões no PostgreSQL implementam
+autenticação. Playwright Python executa o Chromium de exportação; IA é opcional e desligada
+por padrão, sem SDK ou serviço externo necessário aos fluxos manuais.
 As versões resolvidas estão em `requirements.lock` e `package-lock.json`. Atualize dependências
 intencionalmente e execute novamente as verificações. Os Dockerfiles incluem ferramentas de
 desenvolvimento e não constituem configuração de produção.
@@ -256,3 +258,72 @@ O dashboard consulta ausências e alocações afetadas em um período de até 31
 Testes locais usam exclusivamente bancos descartáveis `recephub_sprint05_test` e
 `recephub_sprint05_browser_test`, com `TEST_DATABASE_ALLOW_RESET=1`. Não execute ciclos
 de downgrade ou fixtures de reset no desenvolvimento.
+
+## Sprint 06 — exportação, comunicados e assistência opcional
+
+[Plano e contratos](docs/19-sprint-06.md) e [relatório de execução](docs/20-sprint-06-relatorio-tecnico.md)
+registram o que foi implementado e quais verificações ainda estão pendentes. Não houve deploy.
+
+Reconstrua a imagem, que agora instala Playwright Python 1.56.0, Chromium e bibliotecas
+do sistema. O primeiro build exige download e ocupa mais espaço. Confira o destino do
+banco antes dos comandos; a Sprint 06 não adiciona migrações (o head permanece `0006_absences`).
+
+```sh
+docker compose up --build -d
+docker compose exec backend alembic upgrade head
+docker compose exec backend alembic current
+docker compose exec backend alembic check
+```
+
+Sem Docker, após instalar o lock Python, execute `python -m playwright install --with-deps chromium`
+no ambiente do backend. Em Linux, a instalação das bibliotecas do sistema pode exigir
+privilégios administrativos. O pacote de E2E do frontend não substitui esse runtime.
+
+Em `/schedules/{id}`, escolha uma revisão publicada ou selecione explicitamente o conteúdo
+corrente. A prévia e o download usam essa origem do servidor. PDF contém texto selecionável;
+PNG exporta uma página do mesmo documento. Rascunhos exibem **RASCUNHO NÃO PUBLICADO**,
+versão e identificador em cada página. São permitidos até 30 páginas, 20 MiB e 30 segundos
+por geração, com uma geração simultânea por processo. Use recorte de unidade/data quando
+exceder limites. Download exige sessão e não publica a escala.
+
+Em `/communications`, prepare, edite e copie assunto/corpo. O link de composição `mailto:`
+não inclui destinatários nem envia mensagens. O cliente configurado pode não suportar a
+abertura; copie os campos nesse caso. Acima de 2000 caracteres na URI codificada, o link
+é substituído por orientação de cópia integral, sem cortar o texto. Não há Microsoft Graph.
+
+### Configuração administrativa opcional de IA
+
+Os fluxos manuais funcionam sem qualquer chave. Os valores padrão são `AI_ENABLED=false`,
+`AI_PROVIDER=disabled`, `AI_ALLOW_EXTERNAL_DATA=false` e chaves vazias. Habilitação exige
+administrador configurar no ambiente privado do backend:
+
+| Variável | Finalidade |
+|---|---|
+| `AI_ENABLED=true` | Ativação explícita |
+| `AI_PROVIDER=gemini` | Adaptador suportado; fake é exclusivo dos testes por injeção |
+| `AI_API_KEY` | Chave privada exigida, nunca pública ou versionada |
+| `AI_MODEL` | Modelo; padrão `gemini-2.5-flash` |
+| `AI_ALLOW_EXTERNAL_DATA=true` | Permissão administrativa para chamadas externas |
+| `PROPOSAL_SIGNING_KEY` | Segredo privado de pelo menos 32 caracteres para assinar propostas |
+
+A pessoa responsável deve gerar e armazenar o segredo de assinatura por meio seguro e
+configurá-lo manualmente; nenhuma chave, conta ou credencial é criada por esse procedimento.
+Não publique valores nem os coloque em `NEXT_PUBLIC_*`. Estes documentos não alteram `.env`
+ou `.env.example`. Reinicie o backend após mudar sua configuração privada.
+
+Cada chamada externa ainda exige consentimento na interface. UUIDs/nomes conhecidos são
+convertidos em referências locais, mas texto livre pode conter dados pessoais: revise-o.
+Avalie os [termos do Gemini](https://ai.google.dev/gemini-api/terms) antes de habilitar;
+oferta gratuita pode usar conteúdo para melhoria de produtos, e não há garantia de quota
+ou gratuidade permanente. Não houve validação com chave/provedor real nesta entrega.
+
+Na escala corrente, informe pedido e data de referência, confira todas as diferenças e
+confirme explicitamente. Use os UUIDs completos em “Referências desta escala” para nomes
+iguais. Prévia não grava; confirmação revalida versão, ausências e horários e modifica
+somente o rascunho. Recibo expira em dez minutos; publicar continua sendo outra ação.
+Em Comunicados, uma sugestão só substitui o editor após “Usar sugestão no editor”.
+
+Para conferir manualmente, use dados fictícios: exporte revisão e rascunho, verifique
+acentos/texto selecionável/PNG, altere a escala e confira que a revisão anterior permanece
+igual, prepare e copie um comunicado longo e teste os fluxos manuais com IA desligada.
+As evidências de testes automatizados e CI são registradas separadamente no relatório.
