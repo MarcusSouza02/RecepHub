@@ -1,4 +1,7 @@
 # Resolved with Python 3.11; includes development tools.
+playwright==1.56.0
+pyee==13.0.1
+greenlet==3.5.6
 argon2-cffi==25.1.0
 argon2-cffi-bindings==26.1.0
 cffi==2.1.1

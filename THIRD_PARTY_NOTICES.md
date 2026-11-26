@@ -29,3 +29,22 @@ SOFTWARE.
 ## Manrope and Sora fonts
 
 Locally hosted variable fonts from the official [Google Fonts repository](https://github.com/google/fonts), distributed under the SIL Open Font License 1.1. Copyright and complete license texts accompany the fonts in `frontend/public/fonts/manrope-OFL.txt` and `sora-OFL.txt`. No remote font request is made at runtime.
+
+The backend export renderer also distributes Manrope locally in `backend/app/assets/fonts/`.
+Its complete OFL 1.1 notice accompanies the font there; PDF/PNG generation does not fetch fonts.
+
+## Python export runtime
+
+The Sprint 06 lock includes the following packages. Licenses were checked against installed
+distribution metadata and the maintainers' PyPI release pages on 25 November 2026:
+
+| Package | Version | License and source |
+|---|---|---|
+| Playwright for Python | 1.56.0 | Apache-2.0; [release metadata](https://pypi.org/project/playwright/1.56.0/) |
+| pyee | 13.0.1 | MIT; [release metadata](https://pypi.org/project/pyee/13.0.1/) |
+| greenlet | 3.5.6 | MIT AND PSF-2.0; [release metadata](https://pypi.org/project/greenlet/3.5.6/) |
+
+These packages retain their license files in the installed Python distributions. The backend
+image installs Playwright's associated Chromium build and system libraries; Chromium and
+its bundled third-party components retain their own notices in the browser distribution.
+This runtime is separate from the frontend's development-only Playwright test dependency.

@@ -1,8 +1,8 @@
 # RecepHub — Arquitetura Técnica
 
-**Versão:** 1.4
-**Data:** 24/11/2026
-**Status:** autenticação, cadastros e horários concluídos; escalas semanais em implementação na Sprint 04. Ausências, cobertura e IA são incrementos posteriores.
+**Versão:** 1.5
+**Data:** 25/11/2026
+**Status:** Sprints 02–05 integradas; exportação, comunicados e assistência opcional implementados na Sprint 06, com homologação em andamento.
 
 ## 1. Objetivo arquitetural
 
@@ -35,7 +35,7 @@ Entregar PWA responsivo para uma usuária, com escalas predefinidas, exceções 
    |--- coverage + dashboard (consultas e alertas)
    |--- communications (texto editável, exportação)
    |--- ai (interface e provedores)
-   |       \--> [Gemini API gratuita, quando habilitada]
+   |       \--> [Gemini API opcional, conforme condições vigentes]
    \----------> [PostgreSQL]
 
 [PWA] -- mailto:/cliente de e-mail --> [Outlook ou cliente padrão]
@@ -77,7 +77,7 @@ compartilham o contador PostgreSQL. Reset administrativo revoga todas as sessõe
 
 1. Frontend coleta uma descrição escrita e opções de tom.
 2. Backend autentica, valida tamanho/tipo de entrada, aplica limites e verifica configuração do provedor.
-3. `AIProvider.generate_communication()` retorna `subject` e `body` estruturados.
+3. O contrato `Provider.generate(prompt, schema)` retorna `subject` e `body` estruturados, validados pelo backend.
 4. Backend valida formato e devolve conteúdo editável ao frontend.
 5. Usuária revisa e copia ou abre a composição de e-mail via `mailto:`; destinatários são escolhidos manualmente no cliente.
 6. Em caso de indisponibilidade, o formulário continua utilizável manualmente.
@@ -101,8 +101,8 @@ A Sprint 04 substitui a proposta diária por identidade semanal, sete estados po
 e alocações efetivas. Geração/edição não alteram o habitual. expected_version e bloqueio
 transacional impedem sobrescritas silenciosas. Publicação confirmada cria revisão JSONB
 autocontida e imutável; edição posterior preserva todas as revisões anteriores.
-Ausências/cobertura (05) reutilizarão os comandos; exportação e IA (06) consumirão versões
-identificadas. PDF/PNG determinísticos, sem IA de imagem; engine será avaliada na 06.
+Ausências/cobertura (05) reutilizam os comandos; exportação e IA (06) consomem versões
+identificadas. PDF/PNG compartilham HTML/CSS confiável renderizado por Chromium, sem IA de imagem.
 Outlook permanece por composição no cliente, sem envio automático ou Microsoft Graph.
 
 ## 8. Segurança e confiabilidade mínimas
@@ -158,3 +158,41 @@ sob Schedule → Employee → Unit, revalidando disponibilidade; nenhuma escrita
 adquire Schedule depois de Employee. Prévia não persiste proposta. Consultas do dashboard
 usam período limitado a 31 dias e listas de 20, com total e sinalização de truncamento.
 Não foi adicionada dependência de aplicação. [Plano e contratos](17-sprint-05.md).
+
+## Incremento da Sprint 06
+
+**ADR-004 concretizada:** Playwright Python 1.56.0 e Chromium associados na imagem Debian
+Bookworm renderizam HTML/CSS confiável. PDF preserva texto; PNG usa uma página da mesma
+composição. Manrope local OFL evita rede no runtime. O backend aceita apenas identificação
+de revisão ou rascunho versionado, filtros e formato; não aceita HTML/URL/template livre.
+Revisões usam sua fotografia imutável, e o conteúdo corrente exige seleção explícita com
+marca RASCUNHO NÃO PUBLICADO em todas as páginas. A transação é liberada antes de renderizar.
+Rede é bloqueada, JavaScript desativado, conteúdo escapado. Há limites de 30 páginas,
+20 MiB, 30 segundos e uma geração simultânea por processo. O proxy autenticado valida
+MIME, nome, tamanho e prazo do binário; respostas privadas permanecem sem cache.
+
+**ADR-006 concretizada:** provedor substituível, desligado por padrão, com Gemini opcional
+via HTTPS no host fixo e sem SDK. Habilitar exige `AI_ENABLED`, `AI_PROVIDER=gemini`, chave
+`AI_API_KEY`, modelo `AI_MODEL` e `AI_ALLOW_EXTERNAL_DATA`; cada solicitação requer também
+consentimento explícito. `PROPOSAL_SIGNING_KEY` privada, com ao menos 32 caracteres, é
+exigida para propostas. Fake só existe por injeção nos testes. Sem configuração válida,
+edição manual/exportação/comunicados continuam funcionais. Nomes/UUIDs conhecidos são
+trocados por referências, mas texto livre precisa de revisão humana antes do envio.
+Os [termos do provedor](https://ai.google.dev/gemini-api/terms) e eventuais cotas gratuitas
+precisam ser avaliados administrativamente; não há garantia de gratuidade permanente.
+
+Propostas permitem somente adicionar, editar ou remover períodos. Prévia não grava.
+Resposta mostra pessoa/dia/unidade distinguíveis por identificador, entrada, saída,
+intervalo e atividade antes/depois. Recibo HMAC vincula sessão, escala, versão, operações
+normalizadas e dez minutos de validade. Confirmação explícita revalida sob bloqueios
+Schedule → Employees → Units; lote inteiro grava ou desfaz. Não publica nem altera
+horários habituais. Modelo não recebe SQL ou autoridade de persistência.
+
+**ADR-007 concretizada:** preparação determinística de comunicados, editor e cópia, sem
+persistência, outbox ou envio. IA de redação retorna sugestão separada e só substitui o
+editor após aceite. `mailto:` não inclui destinatários; acima de 2000 caracteres na URI
+codificada a interface oferece cópia integral. Cliente incompatível ou clipboard negado
+também usa cópia manual. Nenhuma conexão Graph, leitura de e-mail ou disparo foi adicionada.
+
+Contratos e evidências: [Sprint 06](19-sprint-06.md) e [relatório](20-sprint-06-relatorio-tecnico.md).
+Não há migração de banco nesta sprint, ativação real de IA ou deploy como parte da entrega.
