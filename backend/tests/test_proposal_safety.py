@@ -1,3 +1,4 @@
+import secrets
 import time as clock
 from concurrent.futures import ThreadPoolExecutor
 from datetime import date, time
@@ -24,12 +25,13 @@ from app.services.proposals import ProposalService
 from app.services.schedules import ScheduleService
 
 pytestmark = pytest.mark.integration
+TEST_SIGNING_KEY = secrets.token_urlsafe(32)
 
 
 def service(db, provider=None):
     return ProposalService(
         db,
-        Settings(_env_file=None, proposal_signing_key="fictional-proposal-safety-key-at-least-32"),
+        Settings(_env_file=None, proposal_signing_key=TEST_SIGNING_KEY),
         "s" * 43,
         provider or FakeProvider(),
     )

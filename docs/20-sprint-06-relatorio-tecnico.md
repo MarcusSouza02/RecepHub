@@ -74,7 +74,13 @@ exibir sua referência selecionável, permitindo distinguir unidades homônimas 
   histórica em desktop 1440×1000 e mobile 390×844. Sem overflow ou erros de página;
   foco visível, acentos corretos e histórico sem controles de edição/assistente.
   Link mailto validado sem abrir nem enviar mensagem. Capturas temporárias, não versionadas.
-- Publicação e CI remota pendentes nesta atualização.
+- Implementação publicada em `4e23b1f`, [PR #14](https://github.com/MarcusSouza02/RecepHub/pull/14).
+  A primeira [CI](https://github.com/MarcusSouza02/RecepHub/actions/runs/45726241974)
+  detectou incompatibilidade do runner Ubuntu mais recente com o Chromium fixado e
+  falso positivo sobre chave exclusivamente fictícia do teste de segurança.
+  Backend fixado em Ubuntu 24.04; teste gera chave temporária em memória.
+  `.gitleaksignore` identifica somente a ocorrência histórica exata (commit/arquivo/regra/linha),
+  sem desativar regra ou excluir arquivos futuros. Nova CI ainda deve ser observada.
 
 Ambiente isolado: bancos `recephub_sprint06_test` e `recephub_sprint06_browser_test` no
 PostgreSQL temporário existente; API exclusiva `recephub-sprint06-api-test` em loopback
